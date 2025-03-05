@@ -20,7 +20,7 @@ Usage:<br>
 
 Clone the repository in a directory of your choice:
 ```
-git clone -b development_v3 https://gitlab.cmbi.umcn.nl/rtc-bioinformatics/metagenomics.git
+git clone https://gitlab.cmbi.umcn.nl/rtc-bioinformatics/metapipe.git
 ```
 
 Required docker images can be found in the `conf/containers.config` file. Singularity images can be made out of docker images by the following code:
