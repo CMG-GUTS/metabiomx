@@ -1,0 +1,154 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/metapipe//nextflow_schema.json",
+    "title": "metapipe pipeline parameters",
+    "description": "Metagenomics workflow for Microbiomics",
+    "type": "object",
+    "$defs": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "required": [
+                "outdir"
+            ],
+            "properties": {
+                "outdir": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "fa_icon": "fas fa-folder-open",
+                    "default": "/home/alemg/metagenomics_test_results"
+                }
+            }
+        },
+        "generic_options": {
+            "title": "Generic options",
+            "type": "object",
+            "fa_icon": "fas fa-file-import",
+            "description": "Less common options for the pipeline, typically set in a config file.",
+            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
+            "properties": {
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
+                "validate_params": {
+                    "type": "boolean",
+                    "description": "Boolean whether to validate parameters against the schema at runtime",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square",
+                    "hidden": true
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/generic_options"
+        }
+    ],
+    "properties": {
+        "singleEnd": {
+            "type": "boolean"
+        },
+        "reads": {
+            "type": "string",
+            "default": "/srv/home1/alemg/nextflow/metapipe/tests/raw/*_{1,R1,2,R2}.{fq,fq.gz,fastq,fastq.gz}"
+        },
+        "cpus": {
+            "type": "integer",
+            "default": 10
+        },
+        "bowtie2_opt": {
+            "type": "string",
+            "default": "--very-sensitive-local --phred33"
+        },
+        "bowtie_db": {
+            "type": "string",
+            "default": "/mnt/comics/bamics/TMP/kneaddata_db/"
+        },
+        "metaphlan_db": {
+            "type": "string",
+            "default": "/mnt/comics/bamics/TMP/metaphlan4_db"
+        },
+        "metaphlan_opt": {
+            "type": "string",
+            "default": "-t rel_ab_w_read_stats"
+        },
+        "humann_db": {
+            "type": "string",
+            "default": "/mnt/comics/bamics/TMP/humann3_db"
+        },
+        "cat_pack_db": {
+            "type": "string",
+            "default": "/mnt/comics/bamics/TMP/CAT_pack/20240422_CAT_nr"
+        },
+        "bypass_trim": {
+            "type": "boolean"
+        },
+        "bypass_decon": {
+            "type": "boolean"
+        },
+        "bypass_assembly": {
+            "type": "boolean",
+            "default": true
+        },
+        "bypass_read_annotation": {
+            "type": "boolean",
+            "default": true
+        },
+        "bypass_contig_annotation": {
+            "type": "boolean",
+            "default": true
+        },
+        "save_trim_reads": {
+            "type": "boolean"
+        },
+        "save_decon_reads": {
+            "type": "boolean",
+            "default": true
+        },
+        "save_interleaved_reads": {
+            "type": "boolean"
+        },
+        "save_multiqc_reports": {
+            "type": "boolean",
+            "default": true
+        },
+        "save_read_annotation": {
+            "type": "boolean",
+            "default": true
+        },
+        "save_assembly": {
+            "type": "boolean",
+            "default": true
+        },
+        "save_contig_annotation": {
+            "type": "boolean",
+            "default": true
+        },
+        "monochrome_logs": {
+            "type": "boolean"
+        },
+        "email": {
+            "type": "string",
+            "default": "alem.gusinac@radboudumc.nl"
+        },
+        "email_on_fail": {
+            "type": "string"
+        },
+        "plaintext_email": {
+            "type": "boolean"
+        },
+        "hook_url": {
+            "type": "string"
+        }
+    }
+}

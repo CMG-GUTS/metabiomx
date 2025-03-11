@@ -128,7 +128,7 @@ workflow PIPELINE_COMPLETION {
     // Completion email and summary
     //
     workflow.onComplete {
-        if (email || email_on_fail) {
+        if (email) {
             completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs)
         }
 
@@ -140,6 +140,9 @@ workflow PIPELINE_COMPLETION {
     }
 
     workflow.onError {
+        if (email_on_fail) {
+            // placeholder
+        }
         log.error "Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting"
     }
 }
