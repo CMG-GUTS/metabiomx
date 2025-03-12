@@ -1,6 +1,7 @@
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.10.0-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
+[![nf-test](https://img.shields.io/badge/tested_with-nf--test-337ab7.svg)](https://code.askimed.com/nf-test)
 
 # Metapipe `v3.0`
 
@@ -74,6 +75,7 @@ wget https://tbb.bio.uu.nl/tina/CAT_pack_prepare/20240422_CAT_nr.tar.gz -P /path
 * Added Contig annotation subworkflow.
 * Added combine trim & decon reads into an overview
 * Added NF-core compatible pipeline initialisation & validation
+* Added simple unit-testing for each subworkflow
 * Testing with 3 samples will happen to output BIOM format instead of text files [IN PROGRESS]
 
 ### 2.2 / 2022-1-4
