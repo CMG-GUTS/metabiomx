@@ -5,6 +5,7 @@ tests/result
 nextflow/
 .nextflow*
 .nf-test
+.sendmail*
 containers/singularity/*
 
 # Byte-compiled / optimized / DLL files
