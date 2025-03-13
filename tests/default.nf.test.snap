@@ -1,0 +1,40 @@
+{
+    "decontamination": {
+        "content": [
+            [
+                "decontamination/S0001_paired_trim_1_kneaddata_paired_1.fastq.gz",
+                "decontamination/S0001_paired_trim_1_kneaddata_paired_2.fastq.gz"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-03-13T11:07:29.287111"
+    },
+    "multiqc": {
+        "content": [
+            [
+                "multiqc/decon_multiqc_report.html",
+                "multiqc/merged_multiqc_stats.tsv",
+                "multiqc/raw_multiqc_report.html",
+                "multiqc/trimmed_multiqc_report.html"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-03-13T11:07:29.325428"
+    },
+    "TEST DECONTAMINATION SUBWORKFLOW": {
+        "content": [
+            9
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-03-12T17:45:50.795891"
+    }
+}

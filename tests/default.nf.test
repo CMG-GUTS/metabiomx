@@ -1,0 +1,44 @@
+nextflow_pipeline {
+
+    name "TEST DECONTAMINATION SUBWORKFLOW"
+    script "../main.nf"
+    tag "decontamination"
+    tag "pipeline"
+
+    test("TEST DECONTAMINATION SUBWORKFLOW") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.trace.succeeded().size()
+                ).match() },
+                { assert snapshot(
+                    path("${outputDir}/decontamination")
+                    .list()
+                    .collect { getRecursiveFileNames(it, outputDir) }
+                    .flatten()
+                ).match("decontamination") },
+                                { assert snapshot(
+                    path("${outputDir}/multiqc")
+                    .list()
+                    .collect { getRecursiveFileNames(it, outputDir) }
+                    .flatten()
+                ).match("multiqc") }
+            )
+        }
+    }
+}
+
+def getRecursiveFileNames(fileOrDir, outputDir) {
+    if(file(fileOrDir.toString()).isDirectory()) {
+        return fileOrDir.list().collect { getRecursiveFileNames(it, outputDir) }
+    }
+    return fileOrDir.toString().replace("${outputDir}/", "")
+}

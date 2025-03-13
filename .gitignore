@@ -1,9 +1,10 @@
 # Private folders
 work/
 results/
-tests/
+tests/result
 nextflow/
 .nextflow*
+.nf-test
 containers/singularity/*
 
 # Byte-compiled / optimized / DLL files
