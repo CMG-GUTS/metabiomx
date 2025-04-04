@@ -17,19 +17,10 @@ include { CONTIG_ANNOTATION } from '../subworkflows/local/contig_annotation.nf'
 
 workflow METAPIPE {
     // INPUT FILE CHECK
-    CHECK_INPUT ( 
-        params.reads, 
-        params.singleEnd,
-        params.bowtie_db,
-        params.metaphlan_db,
-        params.humann_db,
-        params.cat_pack_db
-    )
+    CHECK_INPUT ()
 
     DECONTAMINATION(
         CHECK_INPUT.out.meta,
-        params.bypass_trim,
-        params.bypass_decon,
         CHECK_INPUT.out.bowtie_db
     )
 

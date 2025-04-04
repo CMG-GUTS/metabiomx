@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "nf-pipeline-setup - params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "sample": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "meta": ["id"],
+                "errorMessage": "Sample needs to be string or integer with no spaces!"
+            },
+            "forward_read": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "forward_read needs to be a file path with no spaces.\n\nFile needs to exist!"
+            },
+            "reverse_read": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
+                "errorMessage": "reverse_read needs to be a file path with no spaces.\n\nFile needs to exist!"
+            }
+        },
+        "required": ["sample", "forward_read"]
+    },
+    "uniqueEntries": ["sample"],
+    "dependentRequired": {
+        "reverse_read": ["forward_read"]
+    }
+}

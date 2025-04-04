@@ -60,6 +60,9 @@
       "type": "string",
       "default": "/mnt/home1/alemg/nextflow/metapipe/tests/raw/*_{1,R1,2,R2}.{fq,fq.gz,fastq,fastq.gz}"
     },
+    "input": {
+      "type": "string"
+    },
     "cpus": {
       "type": "integer",
       "default": 10
@@ -95,16 +98,13 @@
       "type": "boolean"
     },
     "bypass_assembly": {
-      "type": "boolean",
-      "default": true
+      "type": "boolean"
     },
     "bypass_read_annotation": {
-      "type": "boolean",
-      "default": true
+      "type": "boolean"
     },
     "bypass_contig_annotation": {
-      "type": "boolean",
-      "default": true
+      "type": "boolean"
     },
     "save_trim_reads": {
       "type": "boolean"
