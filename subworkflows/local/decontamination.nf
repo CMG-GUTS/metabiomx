@@ -17,8 +17,6 @@ include { MERGE_MULTIQC_STATS } from '../../modules/local/merge_multiqc_stats.nf
 workflow DECONTAMINATION {
     take:
     reads
-    bypass_trim
-    bypass_decon
     bowtie2db
 
     main:
@@ -35,7 +33,7 @@ workflow DECONTAMINATION {
     ch_versions = ch_versions.mix(FASTQC_reads.out.versions)
     ch_versions = ch_versions.mix(MULTIQC_reads.out.versions)
 
-    if (!bypass_trim) {
+    if (!params.bypass_trim) {
         TRIMMOMATIC(reads).trimmed_reads.set { ch_trimmed_reads }
         ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions)
 
@@ -50,7 +48,7 @@ workflow DECONTAMINATION {
         ch_trimmed_reads = reads
     }
 
-    if (!bypass_decon) {
+    if (!params.bypass_decon) {
         KNEADDATA(
             ch_trimmed_reads, 
             bowtie2db
