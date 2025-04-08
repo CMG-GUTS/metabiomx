@@ -16,7 +16,7 @@ include { CONTIG_ANNOTATION } from '../subworkflows/local/contig_annotation.nf'
 */
 
 workflow METAPIPE {
-    // INPUT FILE CHECK
+    
     CHECK_INPUT ()
 
     DECONTAMINATION(
@@ -30,89 +30,60 @@ workflow METAPIPE {
             CHECK_INPUT.out.metaphlan_db,
             CHECK_INPUT.out.humann_db
         )
-        // OUTPUT READ ANNOTATION
         if (params.save_interleaved_reads) {
-            READ_ANNOTATION.out.interleaved.map { inputFiles -> 
-                def outDir = file("${params.outdir}/interleaved")
-                outDir.mkdir()
-                inputFiles[1].each { inputFile -> 
-                        file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
-                    }
-            }
+            save_output(READ_ANNOTATION.out.interleaved, "interleaved")
         }
         if (params.save_read_annotation) {
-            def outDir = file("${params.outdir}/read_annotation")
-            outDir.mkdir()
-            READ_ANNOTATION.out.humann3_genes.map { inputFile ->
-                file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
-            }
-            READ_ANNOTATION.out.humann3_pathabundance.map { inputFile ->
-                file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
-            }
-            READ_ANNOTATION.out.humann3_pathcoverage.map { inputFile ->
-                file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
-            }
-            READ_ANNOTATION.out.metaphlan_profiles.map { inputFile ->
-                file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
-            }
+            save_output(READ_ANNOTATION.out.humann3_genes, "read_annotation")
+            save_output(READ_ANNOTATION.out.humann3_pathabundance, "read_annotation")
+            save_output(READ_ANNOTATION.out.humann3_pathcoverage, "read_annotation")
+            save_output(READ_ANNOTATION.out.metaphlan_profiles, "read_annotation")
         }
     }
 
     if (!params.bypass_contig_annotation) {
         CONTIG_ANNOTATION(
             DECONTAMINATION.out.decon,
-            CHECK_INPUT.out.catpack_db
+            CHECK_INPUT.out.catpack_db,
+            CHECK_INPUT.out.busco_db
         )
 
         // OUTPUT CONTIG ANNOTATION
         if (params.save_assembly ) {
-            CONTIG_ANNOTATION.out.assembly.map { inputFiles -> 
-                def outDir = file("${params.outdir}/assembly")
-                outDir.mkdir()
-                file(inputFiles[1]).copyTo(file("${outDir}/${file(inputFiles[1]).getName()}"))
-            }
+            save_output(CONTIG_ANNOTATION.out.assembly, "assembly")
+            save_output(CONTIG_ANNOTATION.out.assembly_qc, "assembly")
+
         }
         if (params.save_contig_annotation) {
-            CONTIG_ANNOTATION.out.taxonomy.map { inputFiles -> 
-                def outDir = file("${params.outdir}/CAT_contig")
-                outDir.mkdir()
-                file(inputFiles[1]).copyTo(file("${outDir}/${file(inputFiles[1]).getName()}"))
-            }
-            CONTIG_ANNOTATION.out.counts.map { inputFile ->
-                def outDir = file("${params.outdir}/CAT_contig")
-                file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
-            }
+            save_output(CONTIG_ANNOTATION.out.taxonomy, "CAT_contig")
+            save_output(CONTIG_ANNOTATION.out.counts, "CAT_contig")
         }
     }
     // // OUTPUT DECONTAMINATION
     if (params.save_trim_reads & !params.bypass_trim) {
-        DECONTAMINATION.out.trimmed.map { inputFiles -> 
-            def outDir = file("${params.outdir}/trimmed")
-            outDir.mkdir()
-            inputFiles[1].each { inputFile -> 
-                    file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
-                }
-        }
+        save_output(DECONTAMINATION.out.trimmed, "trimmed")
     }
     if (params.save_decon_reads & !params.bypass_decon) {
-        DECONTAMINATION.out.decon.map { inputFiles -> 
-            def outDir = file("${params.outdir}/decontamination")
-            outDir.mkdir()
-            inputFiles[1].each { inputFile -> 
-                    file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
-                }
-        }
+        save_output(DECONTAMINATION.out.decon, "decontamination")
     }
 
     if (params.save_multiqc_reports) {
-        DECONTAMINATION.out.multiqc_report.map { inputFile -> 
-            def outDir = file("${params.outdir}/multiqc")
-            outDir.mkdir()
-            file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}")) 
-        }
-        DECONTAMINATION.out.read_stats.map { inputFile ->
-            def outDir = file("${params.outdir}/multiqc")
-            file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
+        save_output(DECONTAMINATION.out.multiqc_report, "multiqc")
+        save_output(DECONTAMINATION.out.read_stats, "multiqc")
+    }
+}
+
+def save_output(input_ch, sub_dir_name) {
+    input_ch.map { item ->
+        def (meta, files) = (item instanceof List && item.size() == 2) ? [item[0], item[1]] : [null, item]
+        def outDir = file("${params.outdir}/${sub_dir_name}")
+        outDir.mkdir()
+        if (files.size() == 2) {
+            files.each { inputFile ->
+               file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
+            }
+        } else {
+            file(files).copyTo(file("${outDir}/${file(files).getName()}"))
         }
     }
 }
