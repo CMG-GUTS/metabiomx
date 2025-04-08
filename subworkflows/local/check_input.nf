@@ -58,10 +58,15 @@ workflow CHECK_INPUT {
         .fromPath(params.cat_pack_db)
         .ifEmpty { exit 1, 'Cannot find directory: ${params.cat_pack_db}\n'}
 
+    busco_ch = Channel
+        .fromPath(params.busco_db)
+        .ifEmpty { exit 1, 'Cannot find directory: ${params.busco_db}\n'}
+
     emit:
     meta                    = meta_ch
     bowtie_db               = bowtie_ch
     metaphlan_db            = metaphlan_ch
     humann_db               = humann_ch
     catpack_db              = nr_ch
+    busco_db                = busco_ch
 }

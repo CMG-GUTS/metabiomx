@@ -4,6 +4,7 @@
 
 */
 include { TRIMMOMATIC } from '../../modules/nf-core/trimmomatic.nf'
+include { ADAPTERREMOVAL } from '../../modules/nf-core/adapterremoval.nf'
 include { FASTQC as FASTQC_reads } from '../../modules/nf-core/fastqc.nf'
 include { FASTQC as FASTQC_trim } from '../../modules/nf-core/fastqc.nf'
 include { FASTQC as FASTQC_decon } from '../../modules/nf-core/fastqc.nf'
@@ -34,8 +35,18 @@ workflow DECONTAMINATION {
     ch_versions = ch_versions.mix(MULTIQC_reads.out.versions)
 
     if (!params.bypass_trim) {
-        TRIMMOMATIC(reads).trimmed_reads.set { ch_trimmed_reads }
-        ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions)
+        if (params.trim_tool == "trimmomatic") {
+            TRIMMOMATIC(reads).trimmed_reads.set { ch_trimmed_reads }
+            ch_versions = ch_versions.mix(TRIMMOMATIC.out.versions)
+        } else {
+            if (params.singleEnd) {
+                ADAPTERREMOVAL(reads, []).singles_truncated.set { ch_trimmed_reads }
+                ch_versions = ch_versions.mix(ADAPTERREMOVAL.out.versions)
+            } else {
+                ADAPTERREMOVAL(reads, []).paired_truncated.set { ch_trimmed_reads }
+                ch_versions = ch_versions.mix(ADAPTERREMOVAL.out.versions)
+            }
+        }
 
         FASTQC_trim(ch_trimmed_reads)
         MULTIQC_trim(
@@ -51,7 +62,7 @@ workflow DECONTAMINATION {
     if (!params.bypass_decon) {
         KNEADDATA(
             ch_trimmed_reads, 
-            bowtie2db
+            bowtie2db.first()
         ).unmapped_reads.filter { meta, files -> 
             if (meta.single_end) {
                 files[0].size() > 0

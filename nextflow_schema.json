@@ -16,8 +16,7 @@
           "type": "string",
           "format": "directory-path",
           "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
-          "fa_icon": "fas fa-folder-open",
-          "default": "/home/alemg/metagenomics_test_results"
+          "fa_icon": "fas fa-folder-open"
         }
       }
     },
@@ -54,14 +53,52 @@
   ],
   "properties": {
     "singleEnd": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Specifies that the input is single-end reads.",
+      "help_text": "By default, the pipeline expects paired-end data. If you have single-end data, you need to specify `--singleEnd` on the command line when you launch the pipeline. A normal glob pattern, enclosed in quotation marks, can then be used for `--input`. For example:\n\n```bash\n--singleEnd --input '*.fastq'\n```\n\nIt is not possible to run a mixture of single-end and paired-end files in one run."
     },
     "reads": {
       "type": "string",
-      "default": "/mnt/home1/alemg/nextflow/metapipe/tests/raw/*_{1,R1,2,R2}.{fq,fq.gz,fastq,fastq.gz}"
+      "format": "file-path",
+      "description": "Path to the folder with FASTQ format sequencing data",
+      "pattern": "^\\S+\\.f(ast)?q\\.gz$"
     },
     "input": {
-      "type": "string"
+      "type": "string",
+      "format": "file-path",
+      "exists": true,
+      "description": "Path to the folder with FASTQ format sequencing data",
+      "pattern": "^\\S+\\.csv$"
+    },
+    "trim_tool": {
+      "type": "string",
+      "description": "Trimming tool to be used",
+      "default": "adapterremoval",
+      "enum": ["adapterremoval", "trimmomatic"],
+      "pattern": "^\\S+$",
+      "errorMessage": "trim_tool can be `adapterremoval` or `trimmomatic` with no spaces!"
+    },
+    "adapters_file": {
+      "type": "string",
+      "format": "file-path",
+      "description": "Path to FASTA format file with adapters sequences",
+      "exists": true,
+      "pattern": "^\\S+\\.f(ast)?a$",
+      "default": "${projectDir}/assets/adapters/NexteraPE-PE.fa"
+    },
+    "custom_adapter_1": {
+      "type": ["string", "boolean"],
+      "default": false,
+      "pattern": "^[ATGCRYKMSWBDHVN]*$",
+      "description": "Forward read adapter to be trimmed by AdapterRemoval.",
+      "errorMessage": "String cannot contain empty spaces and other characters besides: ATGCRYKMSWBDHVN"
+    },
+    "custom_adapter_2": {
+      "type": ["string", "boolean"],
+      "default": false,
+      "pattern": "^[ATGCRYKMSWBDHVN]*$",
+      "description": "Reverse read adapter to be trimmed by AdapterRemoval.",
+      "errorMessage": "String cannot contain empty spaces and other characters besides: ATGCRYKMSWBDHVN"
     },
     "cpus": {
       "type": "integer",
@@ -69,84 +106,142 @@
     },
     "bowtie2_opt": {
       "type": "string",
-      "default": "--very-sensitive-local --phred33"
+      "description": "Bowtie2 alignment mode",
+      "default": "--very-sensitive-local --phred33",
+      "help_text": "Bowtie2 alignment mode options. \n\nMust be used like this: --bowtie2_opt=\"--very-sensitive\""
     },
     "bowtie_db": {
       "type": "string",
+      "description": "Directory folder of bowtie database",
+      "format": "directory-path",
+      "exists": true,
       "default": "/mnt/comics/bamics/TMP/kneaddata_db/"
+    },
+    "busco_db": {
+      "type": "string",
+      "description": "Directory folder of bowtie database",
+      "format": "directory-path",
+      "exists": true,
+      "default": "/mnt/comics/bamics/TMP/busco_db"
     },
     "metaphlan_db": {
       "type": "string",
+      "description": "Directory folder of metaphlan database",
+      "format": "directory-path",
+      "exists": true,
       "default": "/mnt/comics/bamics/TMP/metaphlan4_db"
     },
     "metaphlan_opt": {
       "type": "string",
-      "default": "-t rel_ab_w_read_stats"
+      "description": "Metaphlan mode",
+      "default": "-t rel_ab_w_read_stats",
+      "help_text": "Metaphlan mode options. \n\nMust be used like this: --metaphlan_opt=\"-t rel_ab_w_read_stats\""
     },
     "humann_db": {
       "type": "string",
+      "description": "Directory folder of humann database",
+      "format": "directory-path",
+      "exists": true,
       "default": "/mnt/comics/bamics/TMP/humann3_db"
     },
     "cat_pack_db": {
       "type": "string",
+      "description": "Directory folder of cat_pack database",
+      "format": "directory-path",
+      "exists": true,
       "default": "/mnt/comics/bamics/TMP/CAT_pack/20240422_CAT_nr"
     },
     "bypass_trim": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "skips the trimming step",
+      "help_text": "Skip the trimming step via \"--bypass_trim\".\n\n Default is false"
     },
     "bypass_decon": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "skips the decontamination step",
+      "help_text": "Skip the decontamination step via \"--bypass_decon\".\n\n Default is false"
     },
     "bypass_assembly": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "skips the assembly step",
+      "help_text": "Skip the assembly step via \"--bypass_assembly\".\n\n Default is false"
     },
     "bypass_read_annotation": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "skips the read annotation step",
+      "help_text": "Skip the read annotation step via \"--bypass_read_annotation\".\n\n Default is false"
     },
     "bypass_contig_annotation": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "skips the contig annotation step",
+      "help_text": "Skip the contig annotation step via \"--bypass_contig_annotation\".\n\n Default is false"
     },
     "save_trim_reads": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Saves the trimmed reads to outdir",
+      "help_text": "Saves the trimmed reads to outdir via \"--save_trim_reads\".\n\n Default is false"
     },
     "save_decon_reads": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "description": "Saves the decontamination reads to outdir",
+      "help_text": "Saves the decontamination reads to outdir via \"--save_decon_reads\".\n\n Default is true"
     },
     "save_interleaved_reads": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Saves the interleaved reads to outdir",
+      "help_text": "Saves the interleaved reads to outdir via \"--save_interleaved_reads\".\n\n Default is false"
     },
     "save_multiqc_reports": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "description": "Saves the multiqc reports to outdir",
+      "help_text": "Saves the multiqc reports to outdir via \"--save_multiqc_reports\".\n\n Default is true"
     },
     "save_read_annotation": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "description": "Saves the annotation tables to outdir",
+      "help_text": "Saves the annotation tables to outdir via \"--save_read_annotation\".\n\n Default is true"
     },
     "save_assembly": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "description": "Saves the assembly to outdir",
+      "help_text": "Saves the assembly as FASTA format to outdir via \"--save_assembly\".\n\n Default is true"
     },
     "save_contig_annotation": {
       "type": "boolean",
-      "default": true
+      "default": true,
+      "description": "Saves the contig annotation tables to outdir",
+      "help_text": "Saves the contig annotation tables to outdir via \"--save_contig_annotation\".\n\n Default is true"
     },
     "monochrome_logs": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Use monochrome_logs",
+      "hidden": true
     },
     "email": {
       "type": "string",
-      "default": "alem.gusinac@radboudumc.nl"
+      "description": "Default email address where the diagnostic report is sent to.",
+      "default": "alem.gusinac@radboudumc.nl",
+      "hidden": true
     },
     "email_on_fail": {
-      "type": "string"
+      "type": "string",
+      "description": "Email address for completion summary, only when pipeline fails.",
+      "hidden": true
     },
     "plaintext_email": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Send plain-text email instead of HTML.",
+      "hidden": true
     },
     "hook_url": {
-      "type": "string"
+      "type": "string",
+      "description": "Incoming hook URL for messaging service",
+      "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+      "hidden": true
     }
   }
 }

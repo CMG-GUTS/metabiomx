@@ -22,8 +22,8 @@ workflow READ_ANNOTATION {
 
     HUMANN3(
         INTERLEAVED.out.interleaved_reads,
-        humann_db,
-        metaphlan_db
+        humann_db.first(),
+        metaphlan_db.first()
     )
     ch_versions = ch_versions.mix(HUMANN3.out.versions)
 

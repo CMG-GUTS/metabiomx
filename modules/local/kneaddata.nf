@@ -4,7 +4,7 @@ process KNEADDATA {
 
     input:
     tuple val(meta), path(reads)
-    each path(index)
+    path(index)
 
     output:
     tuple val(meta), path("*kneaddata*.fastq.gz")   , emit: unmapped_reads

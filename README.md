@@ -5,7 +5,7 @@
 
 # Metapipe `v3.0`
 
-The new metapipe version 3 is compatible with [NF-core modules](https://github.com/nf-core/modules) and uses both docker and singularity containers. The user is able to save intermediate files, by the default only the output from decontamination, read annotation and contig annotation is saved unless specified otherwise. The new MetaPIPE also comes with the option to perform either read or contig annotation. At the moment only a single assembler is used, but in the future multiple assembles can be specified. Making this MetaPipe version 3 a true modularized and adaptable workflow.
+The new metapipe version 3 is compatible with [NF-core modules](https://github.com/nf-core/modules) and uses both docker and singularity containers. The user is able to save intermediate files, by default only the output from decontamination, read annotation and contig annotation is saved unless specified otherwise. The new MetaPIPE also comes with the option to perform either read or contig annotation. At the moment only a single assembler is used, but in the future multiple assembles can be specified. Making this MetaPipe version 3 a true modularized and adaptable workflow.
 
 ## Table of contents
 - [Usage](#usage)
@@ -28,6 +28,14 @@ Required docker images can be found in the `conf/containers.config` file. Singul
 ```
 docker save [hash] -o [name].tar
 singularity build [name].sif docker-archive://[name].tar
+```
+
+### nf-test
+nf-test needs to be installed, can be done either from [conda or pip](https://nf-co.re/docs/nf-core-tools/installation).
+nf-test has already been initialised for this repository, otherwise this could be done with `nf-test init`. 
+```bash
+nf-test test tests/default.nf.test --wipe-snapshot --update-snapshot --profile docker
+nf-test test tests/default.nf.test --profile docker
 ```
 
 ## Requirements

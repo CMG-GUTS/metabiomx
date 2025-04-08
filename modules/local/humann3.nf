@@ -4,8 +4,8 @@ process HUMANN3 {
 
     input:
     tuple val(meta), path(reads)
-    each path(humann_index)
-    each path(metaphlan_index)
+    path(humann_index)
+    path(metaphlan_index)
 
     output:
     tuple val(meta), path("*_genefamilies.tsv")         , emit: genefamilies  

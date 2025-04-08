@@ -7,7 +7,7 @@ import re
 #----------------------------------------------------------------------------#
 parser = ArgumentParser(description="MERGE samtools .stats into a single table", add_help=True, formatter_class=ArgumentDefaultsHelpFormatter)
 parser.add_argument('-i','--input', dest='infiles', nargs = "+", help='in filenames', required = True)
-parser.add_argument('-o','--outfile', dest='outfile', type=str, help='out filename', default='merged_read_counts.tsv')
+parser.add_argument('-o','--outfile', dest='outfile', type=str, help='out filename', default='merged_read_stats.tsv')
 options = vars(parser.parse_args())
 
 ## Main code
@@ -20,4 +20,6 @@ merged_df = merged_df[~merged_df.isin(['*']).any(axis=1)]
 
 merged_df.to_csv(options['outfile'], 
                  sep = "\t",
+                 index = True,
+                 header = True
                 )
