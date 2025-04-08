@@ -11,7 +11,7 @@ process BUSCO_SUMMARY {
     script:
 
     """
-    generate_plot.py -wd .
+    python3 /usr/local/bin/generate_plot.py -wd .
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

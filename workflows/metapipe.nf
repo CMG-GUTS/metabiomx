@@ -51,12 +51,13 @@ workflow METAPIPE {
         // OUTPUT CONTIG ANNOTATION
         if (params.save_assembly ) {
             save_output(CONTIG_ANNOTATION.out.assembly, "assembly")
-            save_output(CONTIG_ANNOTATION.out.assembly_qc, "assembly")
+            save_output(CONTIG_ANNOTATION.out.assembly_qc_fig, "assembly")
+            save_output(CONTIG_ANNOTATION.out.assembly_qc_raw, "assembly/busco_summaries")
 
         }
         if (params.save_contig_annotation) {
-            save_output(CONTIG_ANNOTATION.out.taxonomy, "CAT_contig")
-            save_output(CONTIG_ANNOTATION.out.counts, "CAT_contig")
+            save_output(CONTIG_ANNOTATION.out.taxonomy, "CAT_contig/tax")
+            save_output(CONTIG_ANNOTATION.out.counts, "CAT_contig/counts")
         }
     }
     // // OUTPUT DECONTAMINATION

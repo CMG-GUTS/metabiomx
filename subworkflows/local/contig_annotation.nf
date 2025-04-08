@@ -56,7 +56,8 @@ workflow CONTIG_ANNOTATION {
 
     emit:
     assembly           = ch_scaffolds
-    assembly_qc        = BUSCO_SUMMARY.out.busco_figure
+    assembly_qc_fig    = BUSCO_SUMMARY.out.busco_figure
+    assembly_qc_raw    = BUSCO.out.summary
     taxonomy           = CATPACK_CONTIGS.out.classification_with_names
     counts             = MERGE_SAM_STATS.out.merged_read_stats
     versions           = ch_versions
