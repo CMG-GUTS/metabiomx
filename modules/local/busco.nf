@@ -25,12 +25,12 @@ process BUSCO {
     fi
 
     busco \\
+        --offline \\
         --in ${prefix}.fa \\
         --out ${prefix} \\
         --mode genome \\
         -l bacteria \\
-        --download_path $busco_db \\
-        --offline \\
+        --download_path busco_downloads/ \\
         --cpu ${task.cpus}
 
     if [ -f ${prefix}/run_bacteria_odb12/full_table.tsv ]; then
