@@ -1,6 +1,6 @@
 process READ_ABUNDANCE_ESTIMATION {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_low'
 
     input:
     tuple val(meta), path(reads)
