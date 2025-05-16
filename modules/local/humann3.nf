@@ -40,7 +40,7 @@ process HUMANN3 {
         --output-basename $prefix \\
         --nucleotide-database \$CHOCO  \\
         --protein-database \$UNIREF \\
-        --metaphlan-options "--bowtie2db $metaphlan_index" \\
+        --metaphlan-options "--bowtie2db $metaphlan_index --biom ${prefix}.biom" \\
         --threads $task.cpus \\
         --o-log ${prefix}.log
 
