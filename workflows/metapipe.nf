@@ -38,6 +38,7 @@ workflow METAPIPE {
             save_output(READ_ANNOTATION.out.humann3_pathabundance, "read_annotation")
             save_output(READ_ANNOTATION.out.humann3_pathcoverage, "read_annotation")
             save_output(READ_ANNOTATION.out.metaphlan_profiles, "read_annotation")
+            save_output(READ_ANNOTATION.out.metaphlan_biom, "read_annotation")
         }
     }
 
