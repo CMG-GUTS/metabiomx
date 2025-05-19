@@ -4,6 +4,7 @@ import polars as pl
 from scipy import sparse
 from biom.table import Table
 from biom.util import biom_open
+from utils.utils import create_biom
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 #----------------------------------------------------------------------------#
@@ -54,23 +55,11 @@ sp_counts = sparse.csr_matrix(clean_dt.drop('features').to_numpy())
 # OUTPUT: BIOM HDF5 FORMAT
 #----------------------------------------------------------------------------#
 
-taxonomy_metadata = [
-    {'taxonomy': [row[col] for col in taxonomic_ranks]}
-    for row in features.to_dicts()
-]
-
-biom_table = Table(
-    data = sp_counts,
-    observation_ids = [f"OTU_{i}" for i in range(len(taxonomy_metadata))],
+create_biom(
+    counts = sp_counts,
+    features = features,
     sample_ids = samples,
-    observation_metadata = taxonomy_metadata,
-    create_date = time.ctime(time.time()),
-    generated_by = 'MetaPIPE RTC Bioinformatics'
+    taxonomy_ranks = taxonomic_ranks,
+    outdir = options['outdir'],
+    filename = 'metaphlan_with_taxonomy'
 )
-
-with biom_open(os.path.join(options['outdir'] ,'metaphlan_with_taxonomy.biom'), 'w') as outfile:
-    biom_table.to_hdf5(
-        h5grp = outfile, 
-        generated_by = 'MetaPIPE RTC Bioinformatics',
-        compress = True
-    )
