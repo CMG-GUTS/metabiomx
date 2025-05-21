@@ -1,24 +1,25 @@
-process MERGE_SAM_STATS {
+process CAT_TO_BIOM {
     label 'process_single'
 
     input:
+    path(tax_files)
     path(sam_stats)
 
     output:
-    path("merged_read_stats.tsv")          , emit: merged_read_stats
-    path "versions.yml"                    , emit: versions
+    path("CAT_with_taxonomy.biom")          , emit: biom
+    path("versions.yml")                    , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    def filename = 'merged_read_stats.tsv'
 
     """
-    python3 $projectDir/bin/python/merge_sam_stats.py \\
-        -i ${sam_stats} \\
-        -o ${filename}
+    python3 $projectDir/bin/python/anot2biom.py \\
+        --file-tax $tax_files \\
+        --file-counts $sam_stats \\
+        --outdir .
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -29,7 +30,7 @@ process MERGE_SAM_STATS {
     stub:
     def args = task.ext.args ?: ''
     """
-    touch merged_tables.tsv
+    touch CAT_with_taxonomy.biom
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

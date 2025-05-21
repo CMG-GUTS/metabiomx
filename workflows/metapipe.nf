@@ -57,8 +57,7 @@ workflow METAPIPE {
 
         }
         if (params.save_contig_annotation) {
-            save_output(CONTIG_ANNOTATION.out.taxonomy, "CAT_contig/tax")
-            save_output(CONTIG_ANNOTATION.out.counts, "CAT_contig/counts")
+            save_output(CONTIG_ANNOTATION.out.biom, "CAT_contig")
         }
     }
     // // OUTPUT DECONTAMINATION

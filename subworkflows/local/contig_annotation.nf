@@ -8,7 +8,7 @@ include { BUSCO } from                          '../../modules/local/busco.nf'
 include { BUSCO_SUMMARY } from                  '../../modules/local/busco_summary.nf'
 include { CATPACK_CONTIGS } from                '../../modules/nf-core/cat_pack/contigs.nf'
 include { READ_ABUNDANCE_ESTIMATION } from      '../../modules/local/read_abundance_estimation.nf'
-include { MERGE_SAM_STATS } from                '../../modules/local/merge_sam_stats.nf'
+include { CAT_TO_BIOM } from                    '../../modules/local/cat_to_biom.nf'
 
 workflow CONTIG_ANNOTATION {
     take:
@@ -49,16 +49,16 @@ workflow CONTIG_ANNOTATION {
     )
     ch_versions = ch_versions.mix(READ_ABUNDANCE_ESTIMATION.out.versions)
 
-    MERGE_SAM_STATS(
+    CAT_TO_BIOM(
+        CATPACK_CONTIGS.out.classification_with_names.collect{ it[1] },
         READ_ABUNDANCE_ESTIMATION.out.stats.collect{ it[1] }
     )
-    ch_versions = ch_versions.mix(MERGE_SAM_STATS.out.versions)
+    ch_versions = ch_versions.mix(CAT_TO_BIOM.out.versions)
 
     emit:
     assembly           = ch_scaffolds
     assembly_qc_fig    = BUSCO_SUMMARY.out.busco_figure
     assembly_qc_raw    = BUSCO.out.summary
-    taxonomy           = CATPACK_CONTIGS.out.classification_with_names
-    counts             = MERGE_SAM_STATS.out.merged_read_stats
+    biom               = CAT_TO_BIOM.out.biom
     versions           = ch_versions
 }

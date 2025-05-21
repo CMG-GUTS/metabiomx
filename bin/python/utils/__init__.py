@@ -1,1 +1,1 @@
-__all__ = ["create_biom"]
+__all__ = ["create_biom", "align_tax_to_counts"]
