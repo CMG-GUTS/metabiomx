@@ -84,7 +84,8 @@ wget https://tbb.bio.uu.nl/tina/CAT_pack_prepare/20240422_CAT_nr.tar.gz -P /path
 * Added combine trim & decon reads into an overview
 * Added NF-core compatible pipeline initialisation & validation
 * Added simple unit-testing for each subworkflow
-* Testing with 3 samples will happen to output BIOM format instead of text files [IN PROGRESS]
+* Added BIOM OUTPUT in read_annotation and contig_annotation
+* Add genome post-analysis subworkflow [IN PROGRESSS]
 
 ### 2.2 / 2022-1-4
 * Altered docker pulls from 'functionprofiling' and 'taxonomyprofiling' to biobakery/humann:latest 
