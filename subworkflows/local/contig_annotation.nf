@@ -19,13 +19,14 @@ workflow CONTIG_ANNOTATION {
     main:
     ch_versions = Channel.empty()
 
+    // Assembly via metaSpades
     SPADES(
         reads, 
         []
     ).scaffolds.set { ch_scaffolds }
     ch_versions = ch_versions.mix(SPADES.out.versions)
 
-    // BUSCO placeholder
+    // QC of assemblies
     BUSCO(
         ch_scaffolds,
         busco_db.first()
@@ -36,6 +37,7 @@ workflow CONTIG_ANNOTATION {
         BUSCO.out.summary.collect{ it[1] }
     )
 
+    // Contig Annotation
     CATPACK_CONTIGS(
         ch_scaffolds,
         // [], [], 
@@ -43,12 +45,14 @@ workflow CONTIG_ANNOTATION {
     )
     ch_versions = ch_versions.mix(CATPACK_CONTIGS.out.versions)
 
+    // Read count via mapping reads to contigs
     READ_ABUNDANCE_ESTIMATION(
         reads,
         ch_scaffolds
     )
     ch_versions = ch_versions.mix(READ_ABUNDANCE_ESTIMATION.out.versions)
 
+    // Combines read count and CAT taxonomy into a BIOM HDF5 file
     CAT_TO_BIOM(
         CATPACK_CONTIGS.out.classification_with_names.collect{ it[1] },
         READ_ABUNDANCE_ESTIMATION.out.stats.collect{ it[1] }
