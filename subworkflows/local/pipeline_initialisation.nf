@@ -67,6 +67,7 @@ workflow PIPELINE_INITIALISATION {
         ${workflow.manifest.description ?: "A Metagenomic pipeline for Microbiomics data"}
 
     Mandatory Arguments:
+        --input         Path to samplesheet CSV file
         --reads         Path to input fastq files
         --outdir        Path to output directory
         --singleEnd     Using flag sets singleEnd to true
@@ -80,7 +81,8 @@ workflow PIPELINE_INITIALISATION {
         --version       Show the pipeline version and exit
 
     Example Command:
-        nextflow run ${workflow.manifest.mainScript} -profile docker --reads*_{1,2}.fastq.gz --outdir results
+        nextflow run ${workflow.manifest.mainScript} -profile docker --reads *_{1,2}.fastq.gz --outdir results
+        nextflow run ${workflow.manifest.mainScript} -profile singularity --input samplesheet.csv --outdir results
 
     For more information, visit: ${workflow.manifest.homePage}
     """.stripIndent()
@@ -156,8 +158,8 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 //
 def validateParameters() {
-    if ( !params.reads ) {
-        error("Missing reads declaration: --reads` is required.")
+    if ( !params.reads && !params.input) {
+        error("Missing reads and input declaration, one is required.")
     }
 
     if ( !params.outdir ) {
