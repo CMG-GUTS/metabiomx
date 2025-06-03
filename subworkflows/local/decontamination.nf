@@ -54,9 +54,11 @@ workflow DECONTAMINATION {
             "trimmed",
             [], [], [], [], []
         )
+        ch_multiqc_stats_trim = MULTIQC_trim.out.multiqc_stats
         ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_trim.out.report)
     } else {
         ch_trimmed_reads = reads
+        ch_multiqc_stats_trim = Channel.empty()
     }
 
     if (!params.bypass_decon) {
@@ -78,15 +80,17 @@ workflow DECONTAMINATION {
             "decon",
             [], [], [], [], []
         )
+        ch_multiqc_stats_decon = MULTIQC_decon.out.multiqc_stats
         ch_multiqc_files = ch_multiqc_files.mix(MULTIQC_decon.out.report)
     } else {
         ch_decon_reads = ch_trimmed_reads
+        ch_multiqc_stats_decon = Channel.empty()
     }
 
     MERGE_MULTIQC_STATS(
         MULTIQC_reads.out.multiqc_stats,
-        MULTIQC_trim.out.multiqc_stats,
-        MULTIQC_decon.out.multiqc_stats
+        ch_multiqc_stats_trim,
+        ch_multiqc_stats_decon
     )
     
     emit:
@@ -94,6 +98,6 @@ workflow DECONTAMINATION {
     trimmed             = ch_trimmed_reads
     decon               = ch_decon_reads
     multiqc_report      = ch_multiqc_files
-    read_stats          = MERGE_MULTIQC_STATS.out.read_stats
+    read_stats          = Channel.empty()
     versions            = ch_versions
 }
