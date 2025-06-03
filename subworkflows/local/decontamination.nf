@@ -98,6 +98,6 @@ workflow DECONTAMINATION {
     trimmed             = ch_trimmed_reads
     decon               = ch_decon_reads
     multiqc_report      = ch_multiqc_files
-    read_stats          = Channel.empty()
+    read_stats          = MERGE_MULTIQC_STATS.out.read_stats
     versions            = ch_versions
 }
