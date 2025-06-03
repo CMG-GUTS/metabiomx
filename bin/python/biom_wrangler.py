@@ -1,5 +1,4 @@
 import re, time, os
-import numpy as np
 import polars as pl
 from scipy import sparse
 from biom.table import Table

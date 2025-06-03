@@ -15,12 +15,12 @@ process METAPHLAN_TO_BIOM {
     def args = task.ext.args ?: ''
 
     """
-    python3 $projectDir/bin/python/biom_wrangler.py \\
+    python3.11 $projectDir/bin/python/biom_wrangler.py \\
         --i-tsv $merged_metaphlan_table
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python3 --version 2>&1 | awk '{print \$3}')
+        python: \$(python3.11 --version 2>&1 | awk '{print \$3}')
     END_VERSIONS
     """
 
@@ -31,7 +31,7 @@ process METAPHLAN_TO_BIOM {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python3 --version 2>&1 | awk '{print \$3}')
+        python: \$(python3.11 --version 2>&1 | awk '{print \$3}')
     END_VERSIONS
     """
 }
