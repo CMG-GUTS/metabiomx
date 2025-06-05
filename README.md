@@ -10,8 +10,6 @@ The new metapipe version 3 is compatible with [NF-core modules](https://github.c
 ## Table of contents
 - [Usage](#usage)
 - [Installation](#installation)
-- [Other Requirements](#other-requirements)
-- [Changelog](#changelog)
 
 ## Usage
 Usage:<br>
