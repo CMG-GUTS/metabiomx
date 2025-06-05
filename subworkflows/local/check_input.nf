@@ -29,7 +29,6 @@ workflow CHECK_INPUT {
         sample_ch = Channel
             .fromFilePairs(params.reads, size: params.singleEnd ? 1 : 2, checkIfExists: true)
             .ifEmpty { exit 1, 'Cannot find any reads matching: ${reads}\n'}
-
         meta_ch = sample_ch.map { arrayList ->
             def sample_id = arrayList[0]
             def files = arrayList[1]
@@ -37,7 +36,7 @@ workflow CHECK_INPUT {
             meta.id = sample_id
             meta.single_end = params.singleEnd
             return tuple(meta, files)
-            }
+        }
 
         log.info "meta channel from directory"
     }

@@ -20,11 +20,17 @@ workflow CONTIG_ANNOTATION {
     ch_versions = Channel.empty()
 
     // Assembly via metaSpades
-    SPADES(
-        reads, 
-        []
-    ).scaffolds.set { ch_scaffolds }
-    ch_versions = ch_versions.mix(SPADES.out.versions)
+    if (!params.bypass_assembly) {
+        SPADES(
+            reads, 
+            []
+        ).scaffolds.set { ch_scaffolds }
+
+        ch_versions = ch_versions.mix(SPADES.out.versions)
+
+    } else {
+        ch_scaffolds = reads
+    }
 
     // QC of assemblies
     BUSCO(
@@ -42,27 +48,34 @@ workflow CONTIG_ANNOTATION {
         ch_scaffolds,
         // [], [], 
         cat_pack_db.first()
-    )
+    ).classification_with_names.set{ ch_tax_contigs }
+
     ch_versions = ch_versions.mix(CATPACK_CONTIGS.out.versions)
 
-    // Read count via mapping reads to contigs
-    READ_ABUNDANCE_ESTIMATION(
-        reads,
-        ch_scaffolds
-    )
-    ch_versions = ch_versions.mix(READ_ABUNDANCE_ESTIMATION.out.versions)
+    if (!params.bypass_assembly) { 
+        // Read count via mapping reads to contigs
+        READ_ABUNDANCE_ESTIMATION(
+            reads,
+            ch_scaffolds
+        ).stats.set{ ch_read_stats }
+        ch_versions = ch_versions.mix(READ_ABUNDANCE_ESTIMATION.out.versions)
 
-    // Combines read count and CAT taxonomy into a BIOM HDF5 file
-    CAT_TO_BIOM(
-        CATPACK_CONTIGS.out.classification_with_names.collect{ it[1] },
-        READ_ABUNDANCE_ESTIMATION.out.stats.collect{ it[1] }
-    )
-    ch_versions = ch_versions.mix(CAT_TO_BIOM.out.versions)
+        // Combines read count and CAT taxonomy into a BIOM HDF5 file
+        CAT_TO_BIOM(
+            ch_tax_contigs.collect{ it[1] },
+            ch_read_stats.collect{ it[1] }
+        ).biom.set{ ch_biom }
+        ch_versions = ch_versions.mix(CAT_TO_BIOM.out.versions)
+    } else {
+        // In case assembly is skipped, only 
+        ch_biom = ch_tax_contigs.collect{ it[1] }
+    }
+
 
     emit:
     assembly           = ch_scaffolds
     assembly_qc_fig    = BUSCO_SUMMARY.out.busco_figure
     assembly_qc_raw    = BUSCO.out.summary
-    biom               = CAT_TO_BIOM.out.biom
+    biom               = ch_biom
     versions           = ch_versions
 }
