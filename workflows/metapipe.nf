@@ -5,6 +5,7 @@
 */
 
 include { CHECK_INPUT } from '../subworkflows/local/check_input.nf'
+include { CONFIGURE_DATABASES } from '../subworkflows/local/configure_databases.nf'
 include { DECONTAMINATION } from '../subworkflows/local/decontamination.nf'
 include { READ_ANNOTATION } from '../subworkflows/local/read_annotation.nf'
 include { CONTIG_ANNOTATION } from '../subworkflows/local/contig_annotation.nf'
@@ -18,6 +19,16 @@ include { CONTIG_ANNOTATION } from '../subworkflows/local/contig_annotation.nf'
 workflow METAPIPE {
     
     CHECK_INPUT ()
+
+    if (download) {
+        CONFIGURE_DATABASES(
+            CHECK_INPUT.out.bowtie_db,
+            CHECK_INPUT.out.metaphlan_db,
+            CHECK_INPUT.out.humann_db,
+            CHECK_INPUT.out.busco_db,
+            CHECK_INPUT.out.catpack_db
+        )
+    }
 
     // If assembly is bypassed, we asssume that input are assemblies itself!
     if (!params.bypass_assembly) {
