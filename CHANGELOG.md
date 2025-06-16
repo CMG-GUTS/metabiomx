@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - NF-core compatible pipeline initialisation & validation
 - simple unit-testing for each subworkflow
 - BIOM OUTPUT in read_annotation and contig_annotation
+- [#4](https://gitlab.cmbi.umcn.nl/rtc-bioinformatics/metapipe/-/issues/4) Added download option
 
 ### `Changed`
 - Repo structure adapted, and similar to nf-core pipelines
