@@ -4,8 +4,8 @@
 
 */
 include { INTERLEAVED }             from '../../modules/local/interleaved.nf'
-include { HUMANN3 }                 from '../../modules/local/humann3.nf'
-include { MERGE_HUMANN3_TABLES }    from '../../modules/local/merge_humann3_tables.nf'
+include { HUMANN3 }                 from '../../modules/local/humann/humann3.nf'
+include { MERGE_HUMANN3_TABLES }    from '../../modules/local/humann/merge_humann3_tables.nf'
 include { METAPHLAN_TO_BIOM }       from '../../modules/local/metaphlan_to_biom.nf'
 
 workflow READ_ANNOTATION {

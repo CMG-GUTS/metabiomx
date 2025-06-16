@@ -9,7 +9,7 @@ include { FASTQC as FASTQC_reads } from '../../modules/nf-core/fastqc.nf'
 include { FASTQC as FASTQC_trim } from '../../modules/nf-core/fastqc.nf'
 include { FASTQC as FASTQC_decon } from '../../modules/nf-core/fastqc.nf'
 
-include { KNEADDATA } from '../../modules/local/kneaddata.nf'
+include { KNEADDATA } from '../../modules/local/kneaddata/kneaddata.nf'
 include { MULTIQC as MULTIQC_reads } from '../../modules/nf-core/multiqc.nf'
 include { MULTIQC as MULTIQC_trim } from '../../modules/nf-core/multiqc.nf'
 include { MULTIQC as MULTIQC_decon } from '../../modules/nf-core/multiqc.nf'

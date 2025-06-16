@@ -4,8 +4,8 @@
 
 */
 include { SPADES } from                         '../../modules/nf-core/spades.nf'
-include { BUSCO } from                          '../../modules/local/busco.nf'
-include { BUSCO_SUMMARY } from                  '../../modules/local/busco_summary.nf'
+include { BUSCO } from                          '../../modules/local/busco/busco.nf'
+include { BUSCO_SUMMARY } from                  '../../modules/local/busco/summary.nf'
 include { CATPACK_CONTIGS } from                '../../modules/nf-core/cat_pack/contigs.nf'
 include { READ_ABUNDANCE_ESTIMATION } from      '../../modules/local/read_abundance_estimation.nf'
 include { CAT_TO_BIOM } from                    '../../modules/local/cat_to_biom.nf'
@@ -68,9 +68,8 @@ workflow CONTIG_ANNOTATION {
         ch_versions = ch_versions.mix(CAT_TO_BIOM.out.versions)
     } else {
         // In case assembly is skipped, only 
-        ch_biom = ch_tax_contigs.collect{ it[1] }
+        ch_biom = ch_tax_contigs
     }
-
 
     emit:
     assembly           = ch_scaffolds
