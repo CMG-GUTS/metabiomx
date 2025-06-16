@@ -1,12 +1,12 @@
 process CATPACK_DOWNLOAD {
-    tag "${meta.id}"
+    tag "$db_name"
     label 'process_single'
 
     input:
-    tuple val(meta), val(db)
+    val(db_name)
+    path(db_dir)
 
     output:
-    tuple val(meta), path("${prefix}/"), emit: rawdb
     path "versions.yml", emit: versions
 
     when:
@@ -14,13 +14,24 @@ process CATPACK_DOWNLOAD {
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    CAT_pack \\
-        download \\
-        ${args} \\
-        --db ${db}
-        -o ${prefix}/
+    # Check taxonomy files
+    TAX=\$(find -L $db_dir -name "*.dmp" -print -quit)
+    # Check database files
+    DB=\$(find -L $db_dir -name "*.dmnd" -print -quit)
+
+    if [ -n "\$TAX" ] && [ -n "\$DB" ]; then
+        echo "All required files are present. Skipping download."
+    else
+        echo "Required files missing. Downloading database..."
+        mkdir -p $db_dir
+        CAT_pack \\
+            download \\
+            ${args} \\
+            --db ${db_name}
+            -o ${db_dir}/
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -30,15 +41,14 @@ process CATPACK_DOWNLOAD {
 
     stub:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo "CAT_pack \\
         download \\
         ${args} \\
-        --db ${db}
-        -o ${prefix}/"
+        --db ${db_name}
+        -o ${db_dir}/"
 
-    mkdir ${prefix}/
+    mkdir ${db_dir}/
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
