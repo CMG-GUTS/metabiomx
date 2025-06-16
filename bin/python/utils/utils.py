@@ -9,7 +9,29 @@ from biom.util import biom_open
 def create_biom(counts: sparse.csr_matrix, features: pl.DataFrame, sample_ids: List[str], 
                 taxonomy_ranks: List[str], outdir: str, filename: str) -> None:
     """
-    TODO: document me!
+    Creates a biom hdf5 format file from a sparse count matrix and features table
+
+    Parameters
+    ----------
+    counts : sparse.csr_matrix
+        A sparse compressed row matrix, row operations are very fast
+    
+    features : polars.DataFrame
+        A dataframe containing features as rows
+
+    sample_ids : list
+        A list of sample_ids belonging to the counts
+
+    taxonomy_ranks : list
+        A list of taxonomy levels to include
+
+    outdir : str
+
+    filename : str    
+
+    Returns
+    -------
+    None
 
     """
     taxonomy_metadata = [
@@ -35,9 +57,20 @@ def create_biom(counts: sparse.csr_matrix, features: pl.DataFrame, sample_ids: L
 
 def align_tax_to_counts(tax: pl.DataFrame, feature_ids: np.ndarray) -> pl.DataFrame:
     """
-    tax should have a column called 'feature_id'
+    Combines duplicated rows in tax table and re-organizes the rows to be used for the count sparse matrix
 
-    TODO: document me!
+    Parameters
+    ----------
+    tax : polars.DataFrame
+        A dataframe containing features as rows
+
+    feature_ids : numpy.ndarray
+        A vector of index ids from a sparse count matrix
+
+    Returns
+    -------
+    polars.DataFrame
+        An aligned dataframe in same format as tax
 
     """
     # Add row and order index

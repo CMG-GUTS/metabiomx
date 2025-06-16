@@ -36,7 +36,22 @@ options = vars(parser.parse_args())
 #----------------------------------------------------------------------------#
 
 def CAT_to_table(filename: str, feature_ranks: List[str]) -> pl.DataFrame:
-    # Read content
+    """
+    Parses a CAT taxonomy table and outputs a polars dataframe
+
+    Parameters
+    ----------
+    filename : str
+        A CAT taxonomy file.
+    
+    feature_ranks : list
+        A list of taxonomy ranks to extract.
+
+    Returns
+    -------
+    polars.DataFrame
+
+    """
     # Should be replaced to bytes
     with open(filename, 'rb') as infile:
         chunk = infile.readlines()
