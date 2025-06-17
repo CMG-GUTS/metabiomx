@@ -1,11 +1,11 @@
 nextflow_pipeline {
 
-    name "TEST DECONTAMINATION SUBWORKFLOW"
+    name "TEST FULL PIPELINE"
     script "../main.nf"
-    tag "decontamination"
+    tag "full pipeline"
     tag "pipeline"
 
-    test("TEST DECONTAMINATION SUBWORKFLOW") {
+    test("TEST METAPIPE WORKFLOW") {
 
         when {
             params {
@@ -20,17 +20,47 @@ nextflow_pipeline {
                     workflow.trace.succeeded().size()
                 ).match() },
                 { assert snapshot(
+                    path("${outputDir}/trimmed")
+                    .list()
+                    .collect { getRecursiveFileNames(it, outputDir) }
+                    .flatten()
+                ).match("trimmed") },
+                { assert snapshot(
                     path("${outputDir}/decontamination")
                     .list()
                     .collect { getRecursiveFileNames(it, outputDir) }
                     .flatten()
                 ).match("decontamination") },
-                                { assert snapshot(
+                { assert snapshot(
                     path("${outputDir}/multiqc")
                     .list()
                     .collect { getRecursiveFileNames(it, outputDir) }
                     .flatten()
-                ).match("multiqc") }
+                ).match("multiqc") },
+                { assert snapshot(
+                    path("${outputDir}/interleaved")
+                    .list()
+                    .collect { getRecursiveFileNames(it, outputDir) }
+                    .flatten()
+                ).match("interleaved") },
+                { assert snapshot(
+                    path("${outputDir}/read_annotation")
+                    .list()
+                    .collect { getRecursiveFileNames(it, outputDir) }
+                    .flatten()
+                ).match("read_annotation") },
+                { assert snapshot(
+                    path("${outputDir}/assembly")
+                    .list()
+                    .collect { getRecursiveFileNames(it, outputDir) }
+                    .flatten()
+                ).match("assembly") },
+                { assert snapshot(
+                    path("${outputDir}/CAT_contig")
+                    .list()
+                    .collect { getRecursiveFileNames(it, outputDir) }
+                    .flatten()
+                ).match("CAT_contig") }
             )
         }
     }

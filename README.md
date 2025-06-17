@@ -7,13 +7,12 @@
 
 The new metapipe version 3 is compatible with [NF-core modules](https://github.com/nf-core/modules) and uses both docker and singularity containers. The user is able to save intermediate files, by default only the output from decontamination, read annotation and contig annotation is saved unless specified otherwise. The new MetaPIPE also comes with the option to perform either read or contig annotation. At the moment only a single assembler is used, but in the future multiple assembles can be specified. Making this MetaPipe version 3 a true modularized and adaptable workflow.
 
-## Table of contents
-- [Usage](#usage)
-- [Installation](#installation)
-
 ## Usage
-Usage:<br>
-`./nextflow run main.nf -c nextflow.config -work-dir work -profile singularity`
+Since the latest version, metapipe works with both a samplesheet (CSV) format or a path to the input files. Preferably, samplesheets should be provided.
+```
+nextflow run main.nf --input tests/data/samplesheet.csv -work-dir work -profile singularity
+nextflow run main.nf --input 'tests/data/*.fastq.gz' -work-dir work -profile singularity
+```
 
 ## Installation
 
@@ -28,7 +27,7 @@ docker save [hash] -o [name].tar
 singularity build [name].sif docker-archive://[name].tar
 ```
 
-### nf-test
+## nf-test
 nf-test needs to be installed, can be done either from [conda or pip](https://nf-co.re/docs/nf-core-tools/installation).
 nf-test has already been initialised for this repository, otherwise this could be done with `nf-test init`. 
 ```bash
@@ -36,18 +35,27 @@ nf-test test tests/default.nf.test --wipe-snapshot --update-snapshot --profile d
 nf-test test tests/default.nf.test --profile docker
 ```
 
-## Requirements
-The pipeline requires a set of databases which are used by the different tools in the workflow. These should be stored in the resources directory. Optionally the nextflow.config file can be altered to provide personal locations of the resources. Below instructions are listed for the required databases that do not come with the git repository.
-
+## Automatic database setup
+The pipeline requires a set of databases which are used by the different tools within this workflow. The user can setup databases via the `--download` flag, here it is important to specify the path for each database. The `--download` argument will check if required database files are missing and will setup the directory structure that is compatible with the other modules.
+```
+nextflow run main.nf \
+    --download \
+    --bowtie_db path/to/db/bowtie2 \
+    --metaphlan_db path/to/db/metaphlan \
+    --humann_db path/to/db/humann \
+    --cat_pack_db path/to/db/catpack \
+    --busco_db path/to/db/busco_downloads
+```
+## Manual database setup
 ### Humann3 DB
-Make sure the /path/to/databases should contain a `chocophlan`, `uniref` and `utility_mapping` directory. These can be obtained by the following command:
+Make sure the `path/to/db/humann` should contain a `chocophlan`, `uniref` and `utility_mapping` directory. These can be obtained by the following command:
 ```
 docker pull biobakery/humann:latest
 
 docker run --rm -v $(pwd):/scripts biobakery/humann:latest \
-    humann_databases --download chocophlan full /path/to/databases \
-    && humann_databases --download uniref uniref90_diamond /path/to/databases \
-    && humann_databases --download utility_mapping full /path/to/databases 
+    humann_databases --download chocophlan full ./path/to/db/humann \
+    && humann_databases --download uniref uniref90_diamond ./path/to/db/humann \
+    && humann_databases --download utility_mapping full ./path/to/db/humann 
 ```
 
 ### Kneaddata DB
@@ -55,12 +63,29 @@ docker run --rm -v $(pwd):/scripts biobakery/humann:latest \
 docker pull agusinac/kneaddata:latest
 
 docker run --rm -v $(pwd):/scripts agusinac/kneaddata:latest \
-    kneaddata_database --download human_genome bowtie2 /path/to/databases
+    kneaddata_database \
+        --download human_genome bowtie2 ./path/to/db/bowtie2
 ```
 
 ### CAT_pack DB
 A pre-constructed diamond database can be [downloaded](https://tbb.bio.uu.nl/tina/CAT_pack_prepare/) manually or by command:
 ```
-wget https://tbb.bio.uu.nl/tina/CAT_pack_prepare/20240422_CAT_nr.tar.gz -P /path/to/databases \
-    && tar -xzf /path/to/databases/20240422_CAT_nr.tar.gz
+docker pull agusinac/catpack:latest
+
+docker run --rm -v $(pwd):/scripts agusinac/catpack:latest \
+    CAT_pack download \
+        --db nr \
+        -o path/to/db/catpack
+
+```
+
+### busco DB
+BUSCO expects that the directory is called `busco_downloads`.
+```
+docker pull ezlabgva/busco:v5.8.2_cv1
+
+docker run --rm -v $(pwd):/scripts ezlabgva/busco:v5.8.2_cv1 \
+    busco \
+        --download bacteria_odb12 \
+        --download_path path/to/db/busco_downloads
 ```
