@@ -20,7 +20,7 @@ workflow METAPIPE {
     
     CHECK_INPUT ()
 
-    if (download) {
+    if (params.download) {
         CONFIGURE_DATABASES(
             CHECK_INPUT.out.bowtie_db,
             CHECK_INPUT.out.metaphlan_db,
@@ -38,19 +38,19 @@ workflow METAPIPE {
         )
 
         // Creates output channel for only clean reads
-        ch_decontamination = DECONTAMINATION.out.decon
+        ch_decontaminaton = DECONTAMINATION.out.decon
 
         // OUTPUT DECONTAMINATION
         if (params.save_trim_reads & !params.bypass_trim) {
-            save_output(ch_decontaminaton.out.trimmed, "trimmed")
+            save_output(DECONTAMINATION.out.trimmed, "trimmed")
         }
         if (params.save_decon_reads & !params.bypass_decon) {
-            save_output(ch_decontaminaton.out.decon, "decontamination")
+            save_output(DECONTAMINATION.out.decon, "decontamination")
         }
 
         if (params.save_multiqc_reports) {
-            save_output(ch_decontaminaton.out.multiqc_report, "multiqc")
-            save_output(ch_decontaminaton.out.read_stats, "multiqc")
+            save_output(DECONTAMINATION.out.multiqc_report, "multiqc")
+            save_output(DECONTAMINATION.out.read_stats, "multiqc")
         }
     } else {
         // Channel contains non-reads, likely assembly files
