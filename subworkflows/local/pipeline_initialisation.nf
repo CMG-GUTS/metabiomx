@@ -179,6 +179,10 @@ def validateParameters() {
     if (!humann_tmp.isDirectory()) {
         error("Cannot find directory: ${params.humann_db}\n")
     }
+    def busco_tmp = file(params.busco_db)
+    if (!busco_tmp.isDirectory()) {
+        error("Cannot find directory: ${params.busco_db}\n")
+    }
     def catpack_tmp = file(params.cat_pack_db)
     if (!catpack_tmp.isDirectory()) {
         error("Cannot find directory: ${params.cat_pack_db}\n")

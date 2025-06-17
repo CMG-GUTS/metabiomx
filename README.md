@@ -35,7 +35,7 @@ nf-test test tests/default.nf.test --wipe-snapshot --update-snapshot --profile d
 nf-test test tests/default.nf.test --profile docker
 ```
 
-## Automatic database setup
+## Automatic database setup [TO BE TESTED]
 The pipeline requires a set of databases which are used by the different tools within this workflow. The user can setup databases via the `--download` flag, here it is important to specify the path for each database. The `--download` argument will check if required database files are missing and will setup the directory structure that is compatible with the other modules.
 ```
 nextflow run main.nf \

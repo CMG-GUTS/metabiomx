@@ -41,31 +41,6 @@ workflow CHECK_INPUT {
         log.info "meta channel from directory"
     }
 
-    bowtie_ch = Channel
-        .fromPath(params.bowtie_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.bowtie_db}\n'}
-
-    metaphlan_ch = Channel
-        .fromPath(params.metaphlan_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.metaphlan_db}\n'}
-
-    humann_ch = Channel
-        .fromPath(params.humann_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.humann_db}\n'}
-
-    nr_ch = Channel
-        .fromPath(params.cat_pack_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.cat_pack_db}\n'}
-
-    busco_ch = Channel
-        .fromPath(params.busco_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.busco_db}\n'}
-
     emit:
     meta                    = meta_ch
-    bowtie_db               = bowtie_ch
-    metaphlan_db            = metaphlan_ch
-    humann_db               = humann_ch
-    catpack_db              = nr_ch
-    busco_db                = busco_ch
 }
