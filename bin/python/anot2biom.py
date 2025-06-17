@@ -129,6 +129,7 @@ counts_pl = pl.concat(count_tables, how='diagonal')
 
 # Align counts and tax
 aligned_counts_pl, aligned_tax_pl = pl.align_frames([counts_pl.fill_null(0), tax_pl], on='feature_id')
+aligned_counts_pl = aligned_counts_pl.fill_null(0)
 aligned_tax_pl = aligned_tax_pl.fill_null('')
 
 # construct sparse matrix
