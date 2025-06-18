@@ -183,9 +183,9 @@ def validateParameters() {
     if (!busco_tmp.isDirectory()) {
         error("Cannot find directory: ${params.busco_db}\n")
     }
-    def catpack_tmp = file(params.cat_pack_db)
+    def catpack_tmp = file(params.catpack_db)
     if (!catpack_tmp.isDirectory()) {
-        error("Cannot find directory: ${params.cat_pack_db}\n")
+        error("Cannot find directory: ${params.catpack_db}\n")
     }
 }
 

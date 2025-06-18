@@ -23,11 +23,11 @@ workflow METAPIPE {
     if (params.download) {
         // Question: Should I keep this as a default?
         CONFIGURE_DATABASES(
-            params.bowtie_db,
-            params.metaphlan_db,
-            params.humann_db,
-            params.busco_db,
-            params.catpack_db
+            CHECK_INPUT.out.bowtie_db,
+            CHECK_INPUT.out.metaphlan_db,
+            CHECK_INPUT.out.humann_db,
+            CHECK_INPUT.out.busco_db,
+            CHECK_INPUT.out.catpack_db
         )
     }
 
@@ -35,7 +35,7 @@ workflow METAPIPE {
     if (!params.bypass_assembly) {
         DECONTAMINATION(
             CHECK_INPUT.out.meta,
-            params.bowtie_db
+            CHECK_INPUT.out.bowtie_db
         )
 
         // Creates output channel for only clean reads
@@ -61,8 +61,8 @@ workflow METAPIPE {
     if (!params.bypass_read_annotation) {
         READ_ANNOTATION(
             ch_decontaminaton,
-            params.metaphlan_db,
-            params.humann_db
+            CHECK_INPUT.out.metaphlan_db,
+            CHECK_INPUT.out.humann_db
         )
         if (params.save_interleaved_reads) {
             save_output(READ_ANNOTATION.out.interleaved, "interleaved")
@@ -79,8 +79,8 @@ workflow METAPIPE {
     if (!params.bypass_contig_annotation) {
         CONTIG_ANNOTATION(
             ch_decontaminaton,
-            params.catpack_db,
-            params.busco_db
+            CHECK_INPUT.out.catpack_db,
+            CHECK_INPUT.out.busco_db
         )
 
         // OUTPUT CONTIG ANNOTATION
