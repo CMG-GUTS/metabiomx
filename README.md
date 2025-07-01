@@ -7,13 +7,6 @@
 
 The new metapipe version 3 is compatible with [NF-core modules](https://github.com/nf-core/modules) and uses both docker and singularity containers. The user is able to save intermediate files, by default only the output from decontamination, read annotation and contig annotation is saved unless specified otherwise. The new MetaPIPE also comes with the option to perform either read or contig annotation. At the moment only a single assembler is used, but in the future multiple assembles can be specified. Making this MetaPipe version 3 a true modularized and adaptable workflow.
 
-## Usage
-Since the latest version, metaBIOMx works with both a samplesheet (CSV) format or a path to the input files. Preferably, samplesheets should be provided.
-```bash
-nextflow run main.nf --input tests/data/samplesheet.csv -work-dir work -profile singularity
-nextflow run main.nf --input 'tests/data/*.fastq.gz' -work-dir work -profile singularity
-```
-
 ## Installation
 
 Clone the repository in a directory of your choice:
@@ -22,6 +15,13 @@ git clone https://gitlab.cmbi.umcn.nl/rtc-bioinformatics/metapipe.git
 ```
 
 The pipeline is containeraized, meaning it can be runned via docker or singularity images. No further actions need to be performed when using the docker profile, except a docker registery needs to be set on your local system, see [docker](https://docs.docker.com/engine/install/). In case singularity is used, please specify the `singularity.cacheDir` in the nextflow.config so that singularity images are saved there and re-used again.
+
+## Usage
+Since the latest version, metaBIOMx works with both a samplesheet (CSV) format or a path to the input files. Preferably, samplesheets should be provided.
+```bash
+nextflow run main.nf --input tests/data/samplesheet.csv -work-dir work -profile singularity
+nextflow run main.nf --input 'tests/data/*.fastq.gz' -work-dir work -profile singularity
+```
 
 ## Automatic database setup
 The pipeline requires a set of databases which are used by the different tools within this workflow. The user can setup databases via the `--configure` flag, here it is important to specify the path for each database. The `--configure` argument will check if required database files are missing and will setup the directory structure that is compatible with the other modules. This step can be runned before processing the samples but also in combination with the `--input` and `--reads` flags.
