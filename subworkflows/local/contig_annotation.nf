@@ -63,7 +63,8 @@ workflow CONTIG_ANNOTATION {
         // Combines read count and CAT taxonomy into a BIOM HDF5 file
         CAT_TO_BIOM(
             ch_tax_contigs.collect{ it[1] },
-            ch_read_stats.collect{ it[1] }
+            ch_read_stats.collect{ it[1] },
+            ch_scaffolds.collect{ it[1] }
         ).biom.set{ ch_biom }
         ch_versions = ch_versions.mix(CAT_TO_BIOM.out.versions)
     } else {
@@ -72,7 +73,7 @@ workflow CONTIG_ANNOTATION {
     }
 
     emit:
-    assembly           = ch_scaffolds
+    assembly           = CAT_TO_BIOM.out.renamed_scaffolds
     assembly_qc_fig    = BUSCO_SUMMARY.out.busco_figure
     assembly_qc_raw    = BUSCO.out.summary
     biom               = ch_biom
