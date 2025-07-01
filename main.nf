@@ -11,7 +11,7 @@ nextflow.enable.dsl = 2
 IMPORT WORKFLOWS | SUBWORKFLOWS | MODULES
 =========================================================================
 */
-include { METAPIPE } from './workflows/metapipe.nf'
+include { METABIOMX } from './workflows/metabiomx.nf'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/pipeline_initialisation.nf'
 include { PIPELINE_COMPLETION } from './subworkflows/local/pipeline_initialisation.nf'
 
@@ -26,7 +26,7 @@ workflow {
         params.outdir
     )
 
-    METAPIPE ()
+    METABIOMX ()
 
     PIPELINE_COMPLETION(
         params.email,

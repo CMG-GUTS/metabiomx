@@ -9,8 +9,9 @@ include { METAPHLAN_DOWNLOAD } from '../../modules/local/metaphlan/download.nf'
 include { HUMANN_DOWNLOAD } from '../../modules/local/humann/download.nf'
 include { BUSCO_DOWNLOAD } from '../../modules/local/busco/download.nf'
 include { CATPACK_DOWNLOAD } from '../../modules/nf-core/cat_pack/download.nf'
+// include { }
 
-workflow CONFIGURE_DATABASES {
+workflow CONFIGURE {
     take:
     bowtie_db_ch
     metaphlan_db_ch

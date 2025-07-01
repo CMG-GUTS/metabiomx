@@ -39,27 +39,24 @@ workflow CHECK_INPUT {
         }
 
         log.info "meta channel from directory"
+    } else {
+        bowtie_ch = Channel
+            .fromPath(params.bowtie_db)
+
+        metaphlan_ch = Channel
+            .fromPath(params.metaphlan_db)
+
+        humann_ch = Channel
+            .fromPath(params.humann_db)
+
+        nr_ch = Channel
+            .fromPath(params.catpack_db)
+
+        busco_ch = Channel
+            .fromPath(params.busco_db)
+
+        meta_ch = Channel.empty()
     }
-
-    bowtie_ch = Channel
-        .fromPath(params.bowtie_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.bowtie_db}\n'}
-
-    metaphlan_ch = Channel
-        .fromPath(params.metaphlan_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.metaphlan_db}\n'}
-
-    humann_ch = Channel
-        .fromPath(params.humann_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.humann_db}\n'}
-
-    nr_ch = Channel
-        .fromPath(params.catpack_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.catpack_db}\n'}
-
-    busco_ch = Channel
-        .fromPath(params.busco_db)
-        .ifEmpty { exit 1, 'Cannot find directory: ${params.busco_db}\n'}
 
     emit:
     meta                    = meta_ch

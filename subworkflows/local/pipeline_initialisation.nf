@@ -57,14 +57,12 @@ workflow PIPELINE_INITIALISATION {
     Usage:
         nextflow run ${workflow.manifest.mainScript} \\
             -profile <docker/singularity> \\
-            -c nextflow.config \\
             -work-dir <workdir> \\
-            --reads <*_{1,R1,2,R2}.{fq,fq.gz,fastq,fastq.gz}> \\
-            --singleEnd \\
+            --input samplesheet.csv \\
             --outdir <outdir>
 
     Description:
-        ${workflow.manifest.description ?: "A Metagenomic pipeline for Microbiomics data"}
+        ${workflow.manifest.description ?: "A Metagenomic pipeline for Microbiomics shotgun sequencing data"}
 
     Mandatory Arguments:
         --input         Path to samplesheet CSV file
@@ -81,7 +79,7 @@ workflow PIPELINE_INITIALISATION {
         --version       Show the pipeline version and exit
 
     Example Command:
-        nextflow run ${workflow.manifest.mainScript} -profile docker --reads *_{1,2}.fastq.gz --outdir results
+        nextflow run ${workflow.manifest.mainScript} -profile docker --reads '*_{1,2}.fastq.gz' --outdir results
         nextflow run ${workflow.manifest.mainScript} -profile singularity --input samplesheet.csv --outdir results
 
     For more information, visit: ${workflow.manifest.homePage}
@@ -158,7 +156,7 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 //
 def validateParameters() {
-    if ( !params.reads && !params.input) {
+    if ( !params.reads && !params.input && !params.configure) {
         error("Missing reads and input declaration, one is required.")
     }
 

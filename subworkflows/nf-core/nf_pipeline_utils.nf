@@ -161,12 +161,12 @@ def metapipeLogo(monochrome_logs=true) {
     String.format(
         """\n
         ${colors.yellow}===============================================================${colors.reset}
-        ${colors.green} ███╗   ███╗███████╗████████╗ █████╗ ██████╗ ██╗██████╗ ███████╗ ${colors.reset}
-        ${colors.green} ████╗ ████║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██║██╔══██╗██╔════╝ ${colors.reset}
-        ${colors.green} ██╔████╔██║█████╗     ██║   ███████║██████╔╝██║██████╔╝█████╗   ${colors.reset}
-        ${colors.green} ██║╚██╔╝██║██╔══╝     ██║   ██╔══██║██╔═══╝ ██║██╔═══╝ ██╔══╝   ${colors.reset}
-        ${colors.green} ██║ ╚═╝ ██║███████╗   ██║   ██║  ██║██║     ██║██║     ███████╗ ${colors.reset}
-        ${colors.green} ╚═╝     ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝     ╚══════╝ ${colors.reset}
+        ${colors.green} ███╗   ███╗███████╗████████╗ █████╗ ██████╗ ██╗ ██████╗ ███╗   ███╗██╗  ██╗ ${colors.reset}
+        ${colors.green} ████╗ ████║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██║██╔═══██╗████╗ ████║╚██╗██╔╝ ${colors.reset}
+        ${colors.green} ██╔████╔██║█████╗     ██║   ███████║██████╔╝██║██║   ██║██╔████╔██║ ╚███╔╝  ${colors.reset}
+        ${colors.green} ██║╚██╔╝██║██╔══╝     ██║   ██╔══██║██╔══██╗██║██║   ██║██║╚██╔╝██║ ██╔██╗  ${colors.reset}
+        ${colors.green} ██║ ╚═╝ ██║███████╗   ██║   ██║  ██║██████╔╝██║╚██████╔╝██║ ╚═╝ ██║██╔╝ ██╗ ${colors.reset}
+        ${colors.green} ╚═╝     ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝ ${colors.reset}
         ${colors.yellow}===============================================================${colors.reset}
         ${colors.purple} ${getWorkflowVersion()}${colors.reset}
         """.stripIndent()
@@ -311,7 +311,7 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     Map colors = logColours(monochrome_logs)
     sendMail(
         to: email,
-        from: 'alem.gusinac@radboudumc.nl', // To be replaced by rtc bioinformatics mail address
+        from: params.email_sender,
         subject: subject,
         test: email_txt,
         body: email_html,

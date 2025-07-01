@@ -16,10 +16,11 @@ process BUSCO_DOWNLOAD {
     def args = task.ext.args ?: ''
     """
     # Find full path to lineage directory
-    LINEAGE_DIR=\$(find "\$db_dir" -type d -name "\$lineage" -print -quit)
+    LINEAGE_DIR=\$(find -L ${db_dir} -type d -name "${lineage}" -print -quit)
+    MISSING=0
 
     if [ -z "\$LINEAGE_DIR" ]; then
-        echo "Lineage directory '\$lineage' not found under \$db_dir."
+        echo "Lineage directory '${lineage}' not found under ${db_dir}."
         MISSING=1
     else
         echo "Found lineage directory: \$LINEAGE_DIR"

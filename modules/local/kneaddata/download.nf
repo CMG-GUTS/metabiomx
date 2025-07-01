@@ -17,7 +17,7 @@ process KNEADDATA_DOWNLOAD {
 
     """
     # Search for any file ending with .bt2 under db_dir
-    BT2_FILE=\$(find "\$db_dir" -type f -name "hg37*.bt2" -print -quit)
+    BT2_FILE=\$(find -L ${db_dir} -type f -name "hg37*.bt2" -print -quit)
 
     if [ -n "\$BT2_FILE" ]; then
         echo ".bt2 file found: \$BT2_FILE"

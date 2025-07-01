@@ -15,7 +15,7 @@ process HUMANN_DOWNLOAD {
 
     """
     # Check chocophlan for *.ffn.gz files (should be around 12773)
-    CHOCO_COUNT=\$(find "\$db_dir/chocophlan" -type f -name "*.ffn.gz" | wc -l)
+    CHOCO_COUNT=\$(find "${db_dir}/chocophlan" -type f -name "*.ffn.gz" | wc -l)
     if [ "\$CHOCO_COUNT" -ge 12770 ] && [ "\$CHOCO_COUNT" -le 12776 ]; then
         echo "chocophlan: Found \$CHOCO_COUNT *.ffn.gz files (expected ~12773)."
     else
@@ -25,7 +25,7 @@ process HUMANN_DOWNLOAD {
     fi
 
     # Check uniref90 for .dmnd file
-    UNIREF_DMND=\$(find "\$db_dir/uniref90" -type f -name "*.dmnd" -print -quit)
+    UNIREF_DMND=\$(find "${db_dir}/uniref90" -type f -name "*.dmnd" -print -quit)
     if [ -n "\$UNIREF_DMND" ]; then
         echo "uniref90: .dmnd file found (\$UNIREF_DMND)."
     else
@@ -35,8 +35,8 @@ process HUMANN_DOWNLOAD {
     fi
 
     # Check utility_mapping for map*.bz2 and map*.txt.gz files
-    MAP_BZ2=\$(find "\$db_dir/utility_mapping" -type f -name "map*.bz2" -print -quit)
-    MAP_TXT_GZ=\$(find "\$db_dir/utility_mapping" -type f -name "map*.txt.gz" -print -quit)
+    MAP_BZ2=\$(find "${db_dir}/utility_mapping" -type f -name "map*.bz2" -print -quit)
+    MAP_TXT_GZ=\$(find "${db_dir}/utility_mapping" -type f -name "map*.txt.gz" -print -quit)
     if [ -n "\$MAP_BZ2" ] && [ -n "\$MAP_TXT_GZ" ]; then
         echo "utility_mapping: files found (\$MAP_BZ2), (\$MAP_TXT_GZ)."
     else
