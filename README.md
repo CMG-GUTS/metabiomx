@@ -38,6 +38,7 @@ nextflow run main.nf \
 ```
 <details open>
 <summary>Manual database setup</summary>
+
 ### Humann3 DB
 Make sure the `path/to/db/humann` should contain a `chocophlan`, `uniref` and `utility_mapping` directory. These can be obtained by the following command:
 ```bash
@@ -84,6 +85,7 @@ docker run --rm -v $(pwd):/scripts ezlabgva/busco:v5.8.2_cv1 \
 
 <details open>
 <summary>nf-test</summary>
+
 nf-test needs to be installed, can be done either from [conda or pip](https://nf-co.re/docs/nf-core-tools/installation).
 nf-test has already been initialised for this repository, otherwise this could be done with `nf-test init`. 
 ```bash
