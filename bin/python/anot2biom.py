@@ -247,3 +247,14 @@ create_biom(
     outdir = options['outdir'],
     filename = 'CAT_with_taxonomy'
 )
+
+#----------------------------------------------------------------------------#
+# OUTPUT: REPRESENTATIVE SEQUENCES
+#----------------------------------------------------------------------------#
+
+final_feature_ids_list = final_feature_ids.tolist()
+df_filtered = df_sorted.filter(pl.col("new_id").is_in(final_feature_ids_list))
+with open(f"combined_scaffolds.fasta", "a") as outfile:
+    for row in df_filtered.iter_rows(named=True):
+        outfile.write(f">{row['new_id']}\n{row['seq']}\n")
+os.system("gzip combined_scaffolds.fasta")

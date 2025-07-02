@@ -9,6 +9,7 @@ process CAT_TO_BIOM {
     output:
     path("CAT_with_taxonomy.biom")          , emit: biom
     path("*_renamed.fa.gz")                 , emit: renamed_scaffolds
+    path("combined_scaffolds*")             , emit: combined_scaffolds
     path("versions.yml")                    , emit: versions
 
     when:

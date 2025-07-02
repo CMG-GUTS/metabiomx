@@ -73,7 +73,9 @@ workflow CONTIG_ANNOTATION {
     }
 
     emit:
-    assembly           = CAT_TO_BIOM.out.renamed_scaffolds
+    assembly_original  = ch_scaffolds
+    assembly_renamed   = CAT_TO_BIOM.out.renamed_scaffolds
+    assembly_combined  = CAT_TO_BIOM.out.combined_scaffolds
     assembly_qc_fig    = BUSCO_SUMMARY.out.busco_figure
     assembly_qc_raw    = BUSCO.out.summary
     biom               = ch_biom

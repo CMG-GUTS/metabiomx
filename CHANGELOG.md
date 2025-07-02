@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Singularity images are not downloaded in a singularity cacheDir to be specified by the user.
 
 ### `Fixed`
+- [#6](https://gitlab.cmbi.umcn.nl/rtc-bioinformatics/metapipe/-/issues/6) duplicate headers from spades
 
 ### `Dependencies`
 
