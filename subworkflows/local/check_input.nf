@@ -37,32 +37,12 @@ workflow CHECK_INPUT {
             meta.single_end = params.singleEnd
             return tuple(meta, files)
         }
-
-        log.info "meta channel from directory"
     } else {
-        bowtie_ch = Channel
-            .fromPath(params.bowtie_db)
-
-        metaphlan_ch = Channel
-            .fromPath(params.metaphlan_db)
-
-        humann_ch = Channel
-            .fromPath(params.humann_db)
-
-        nr_ch = Channel
-            .fromPath(params.catpack_db)
-
-        busco_ch = Channel
-            .fromPath(params.busco_db)
-
         meta_ch = Channel.empty()
     }
 
+    log.info "meta channel from directory"
+
     emit:
     meta                    = meta_ch
-    bowtie_db               = bowtie_ch
-    metaphlan_db            = metaphlan_ch
-    humann_db               = humann_ch
-    catpack_db              = nr_ch
-    busco_db                = busco_ch
 }

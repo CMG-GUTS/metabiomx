@@ -7,7 +7,8 @@ process BUSCO_DOWNLOAD {
     path(db_dir)
 
     output:
-    path "versions.yml"   , emit: versions
+    path db_dir             , emit: db_dir_out 
+    path "versions.yml"     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -64,8 +65,6 @@ process BUSCO_DOWNLOAD {
     stub:
     def args = task.ext.args ?: ''
     """
-    mkdir busco_downloads
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         busco: \$( busco --version 2> /dev/null | sed 's/BUSCO //g' )

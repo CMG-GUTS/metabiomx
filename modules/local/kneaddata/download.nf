@@ -7,7 +7,8 @@ process KNEADDATA_DOWNLOAD {
     path(db_dir)
 
     output:
-    path "versions.yml", emit: versions
+    path db_dir             , emit: db_dir_out 
+    path "versions.yml"     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,7 +24,7 @@ process KNEADDATA_DOWNLOAD {
         echo ".bt2 file found: \$BT2_FILE"
     else
         echo "No .bt2 files found... Downloading kneaddata database"
-        kneaddata_database --download $db_name $db_dir
+        kneaddata_database --download $db_name ${db_dir}
     fi
 
     cat <<-END_VERSIONS > versions.yml
@@ -35,8 +36,6 @@ process KNEADDATA_DOWNLOAD {
     stub:
     def args = task.ext.args ?: ''
     """
-    mkdir -p $db_dir
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         kneaddata: \$(echo \$(kneaddata --version 2>&1))

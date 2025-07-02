@@ -7,7 +7,8 @@ process CATPACK_DOWNLOAD {
     path(db_dir)
 
     output:
-    path "versions.yml", emit: versions
+    path db_dir             , emit: db_dir_out 
+    path "versions.yml"     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -17,15 +18,14 @@ process CATPACK_DOWNLOAD {
 
     """
     # Check taxonomy files
-    TAX=\$(find -L $db_dir -name "*.dmp" -print -quit)
+    TAX=\$(find -L ${db_dir} -name "*.dmp" -print -quit)
     # Check database files
-    DB=\$(find -L $db_dir -name "*.dmnd" -print -quit)
+    DB=\$(find -L ${db_dir} -name "*.dmnd" -print -quit)
 
     if [ -n "\$TAX" ] && [ -n "\$DB" ]; then
         echo "All required files are present. Skipping download."
     else
         echo "Required files missing. Downloading database..."
-        mkdir -p $db_dir
         CAT_pack \\
             download \\
             ${args} \\

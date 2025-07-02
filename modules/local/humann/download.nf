@@ -5,7 +5,8 @@ process HUMANN_DOWNLOAD {
     path(db_dir)
 
     output:
-    path "versions.yml", emit: versions
+    path db_dir             , emit: db_dir_out 
+    path "versions.yml"     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -57,7 +58,7 @@ process HUMANN_DOWNLOAD {
     stub:
     def args = task.ext.args ?: ''
     """
-    mkdir -p $db_dir
+    mkdir -p ${db_dir}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

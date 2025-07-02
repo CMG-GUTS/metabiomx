@@ -17,26 +17,18 @@ include { CONTIG_ANNOTATION } from '../subworkflows/local/contig_annotation.nf'
 */
 
 workflow METABIOMX {
-    
+    // Validates input
     CHECK_INPUT ()
 
-    if (params.configure) {
-        // Question: Should I keep this as a default?
-        CONFIGURE(
-            CHECK_INPUT.out.bowtie_db,
-            CHECK_INPUT.out.metaphlan_db,
-            CHECK_INPUT.out.humann_db,
-            CHECK_INPUT.out.busco_db,
-            CHECK_INPUT.out.catpack_db
-        )
-    }
+    // Default check-up of databases
+    CONFIGURE()
 
     if (params.input || params.reads) {
         // If assembly is bypassed, we asssume that input are assemblies itself!
         if (!params.bypass_assembly) {
             DECONTAMINATION(
                 CHECK_INPUT.out.meta,
-                CHECK_INPUT.out.bowtie_db
+                CONFIGURE.out.bowtie_db
             )
 
             // Creates output channel for only clean reads
@@ -62,8 +54,8 @@ workflow METABIOMX {
         if (!params.bypass_read_annotation) {
             READ_ANNOTATION(
                 ch_decontaminaton,
-                CHECK_INPUT.out.metaphlan_db,
-                CHECK_INPUT.out.humann_db
+                CONFIGURE.out.metaphlan_db,
+                CONFIGURE.out.humann_db
             )
             if (params.save_interleaved_reads) {
                 save_output(READ_ANNOTATION.out.interleaved, "interleaved")
@@ -80,8 +72,8 @@ workflow METABIOMX {
         if (!params.bypass_contig_annotation) {
             CONTIG_ANNOTATION(
                 ch_decontaminaton,
-                CHECK_INPUT.out.catpack_db,
-                CHECK_INPUT.out.busco_db
+                CONFIGURE.out.catpack_db,
+                CONFIGURE.out.busco_db
             )
 
             // OUTPUT CONTIG ANNOTATION

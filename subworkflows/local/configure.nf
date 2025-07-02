@@ -12,43 +12,68 @@ include { CATPACK_DOWNLOAD } from '../../modules/nf-core/cat_pack/download.nf'
 // include { }
 
 workflow CONFIGURE {
-    take:
-    bowtie_db_ch
-    metaphlan_db_ch
-    humann_db_ch
-    busco_db_ch
-    catpack_db_ch
-
     main:
+    bowtie_ch = ensureDirExists(params.bowtie_db)
+    metaphlan_ch = ensureDirExists(params.metaphlan_db)
+    humann_ch = ensureDirExists(params.humann_db)
+    busco_ch = ensureDirExists(params.busco_db)
+    nr_ch = ensureDirExists(params.catpack_db)
+
     if (!params.bypass_decon) {
         KNEADDATA_DOWNLOAD(
             "human_genome bowtie2",
-            bowtie_db_ch
-        )
+            bowtie_ch
+        ).db_dir_out.set{ kneaddata_db_ch }
+
+    } else {
+        kneaddata_db_ch = bowtie_ch
     }
 
     if (!params.bypass_read_annotation) {
         METAPHLAN_DOWNLOAD(
-            metaphlan_db_ch
-        )
+            metaphlan_ch
+        ).db_dir_out.set{ metaphlan_db_ch }
 
         HUMANN_DOWNLOAD(
-            humann_db_ch
-        )
+            humann_ch
+        ).db_dir_out.set{ humann_db_ch }
+
+    } else {
+        metaphlan_db_ch = metaphlan_ch
+        humann_db_ch = humann_ch
     }
 
-    if (!params.bypass_assembly) {
+    if (!params.bypass_assembly && params.bypass_decon && params.bypass_trim) {
         BUSCO_DOWNLOAD(
             "bacteria_odb12",
-            busco_db_ch
-        )
+            busco_ch
+        ).db_dir_out.set{ busco_db_ch }
+    } else {
+        busco_db_ch = busco_ch
     }
 
     if (!params.bypass_contig_annotation) {
         // Currently only NR is supported, GTDB isn't valid: https://github.com/MGXlab/CAT_pack/issues/82
         CATPACK_DOWNLOAD(
             "nr", 
-            catpack_db_ch
-        )
+            nr_ch
+        ).db_dir_out.set{ catpack_db_ch }
+    } else {
+        catpack_db_ch = nr_ch
     }
+
+    emit:
+    bowtie_db               = kneaddata_db_ch
+    metaphlan_db            = metaphlan_db_ch
+    humann_db               = humann_db_ch
+    busco_db                = busco_db_ch
+    catpack_db              = catpack_db_ch
+}
+
+def ensureDirExists(String dirPath) {
+    def dir = file(dirPath)
+    if (!dir.exists()) {
+        dir.mkdirs()
+    }
+    return Channel.fromPath(dirPath)
 }

@@ -14,7 +14,7 @@ Clone the repository in a directory of your choice:
 git clone https://gitlab.cmbi.umcn.nl/rtc-bioinformatics/metapipe.git
 ```
 
-The pipeline is containeraized, meaning it can be runned via docker or singularity images. No further actions need to be performed when using the docker profile, except a docker registery needs to be set on your local system, see [docker](https://docs.docker.com/engine/install/). In case singularity is used, please specify the `singularity.cacheDir` in the nextflow.config so that singularity images are saved there and re-used again.
+The pipeline is containerised, meaning it can be runned via docker or singularity images. No further actions need to be performed when using the docker profile, except a docker registery needs to be set on your local system, see [docker](https://docs.docker.com/engine/install/). In case singularity is used, please specify the `singularity.cacheDir` in the `nextflow.config` so that singularity images are saved there and re-used again.
 
 ## Usage
 Since the latest version, metaBIOMx works with both a samplesheet (CSV) format or a path to the input files. Preferably, samplesheets should be provided.

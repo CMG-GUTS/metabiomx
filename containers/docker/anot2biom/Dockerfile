@@ -65,7 +65,8 @@ RUN wget https://bootstrap.pypa.io/get-pip.py \
 RUN pip install scipy \
                 numpy \
                 polars \
-                biom-format
+                biom-format \
+                pyfastx
 
 #------------------------------------------------------------------------------------#
 # Final steps
