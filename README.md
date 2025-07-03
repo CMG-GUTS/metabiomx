@@ -16,12 +16,12 @@ The pipeline is able to perform different taxonomic annotation on either (single
 
 For both subworkflows the pipeline will perform read trimming via [Trimmomatic](https://github.com/timflutre/trimmomatic) and/or [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval), followed by human removal via [Kneaddata](https://huttenhower.sph.harvard.edu/kneaddata/). Before and after each step the quality control will be assessed via [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) and a [multiqc](https://github.com/MultiQC/MultiQC) report is created as output. Then taxonomy annotation is done as follows:
 
-* Read annotation
+**Read annotation**
 - paired reads are interleaved using [BBTools](https://archive.jgi.doe.gov/data-and-tools/software-tools/bbtools/).
 - [MetaPhlAn3](https://huttenhower.sph.harvard.edu/metaphlan/) and [HUMAnN3](https://huttenhower.sph.harvard.edu/humann/) are used for taxonomy and functional profiling.
 - taxonomy profiles are merged into a single BIOM file using [biom-format](https://github.com/biocore/biom-format).
 
-* Contig annotation
+**Contig annotation**
 - read assembly is performed via [SPAdes](http://cab.spbu.ru/software/spades/).
 - Quality assesment of contigs is done via [Busco](https://busco.ezlab.org/).
 - taxonomy profiles are created using [CAT](https://github.com/dutilh/CAT).
