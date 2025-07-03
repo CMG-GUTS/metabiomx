@@ -7,9 +7,7 @@
 
 The metagenomics microbiomics pipeline is a best-practice suite for the decontamination and annotation of sequencing data obtained via short-read shotgun sequencing. The pipeline contains [NF-core modules](https://github.com/nf-core/modules) and other local modules that are in the similar format. It can be runned via both docker and singularity containers.
 
-<div align="center">
-    <img src="docs/images/metabiomix_workflow.png" alt="metabiomx workflow overview" width="90%">
-</div>
+<img src="docs/images/metabiomix_workflow.png" alt="metabiomx workflow overview" width="90%">
 
 ## Pipeline summary
 The pipeline is able to perform different taxonomic annotation on either (single/paired) reads or contigs. The different subworkflows can be defined via `--bypass_<method>` flags, a full overview is shown by running `--help`.
