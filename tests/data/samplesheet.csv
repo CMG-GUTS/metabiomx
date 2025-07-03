@@ -1,2 +1,0 @@
-sample,forward_read,reverse_read
-S0001,/home/alemg/nextflow/metapipe/tests/data/S0001_1.fastq.gz,/home/alemg/nextflow/metapipe/tests/data/S0001_2.fastq.gz
