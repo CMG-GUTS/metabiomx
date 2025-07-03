@@ -6,8 +6,8 @@ process INTERLEAVED {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*interleaved*")   , emit: interleaved_reads
-    path  "versions.yml"                     , emit: versions
+    tuple val(new_meta), path("*interleaved*")  , emit: interleaved_reads
+    path  "versions.yml"                        , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -18,11 +18,12 @@ process INTERLEAVED {
     def prefix          = task.ext.prefix ?: "${meta.id}"
 
     def reads_args = ""
-    if (meta.single_end) {
+    new_meta = meta.clone()
+    if (new_meta.single_end) {
         reads_args = "in=${reads[0]}"
     } else {
         reads_args = "in1=${reads[0]} in2=${reads[1]}"
-        meta.single_end = true
+        new_meta.single_end = true
     }
 
     """

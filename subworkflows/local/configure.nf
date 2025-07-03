@@ -43,7 +43,7 @@ workflow CONFIGURE {
         humann_db_ch = humann_ch
     }
 
-    if (!params.bypass_assembly && params.bypass_decon && params.bypass_trim) {
+    if (!params.bypass_contig_annotation) {
         BUSCO_DOWNLOAD(
             "bacteria_odb12",
             busco_ch
