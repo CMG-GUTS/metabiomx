@@ -31,6 +31,7 @@ workflow CONFIGURE {
 
     if (!params.bypass_read_annotation) {
         METAPHLAN_DOWNLOAD(
+            params.metaphlan_db_index,
             metaphlan_ch
         ).db_dir_out.set{ metaphlan_db_ch }
 
@@ -45,7 +46,7 @@ workflow CONFIGURE {
 
     if (!params.bypass_contig_annotation) {
         BUSCO_DOWNLOAD(
-            "bacteria_odb12",
+            params.busco_lineage,
             busco_ch
         ).db_dir_out.set{ busco_db_ch }
     } else {

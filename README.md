@@ -7,10 +7,12 @@
 
 The metagenomics microbiomics pipeline is a best-practice suite for the decontamination and annotation of sequencing data obtained via short-read shotgun sequencing. The pipeline contains [NF-core modules](https://github.com/nf-core/modules) and other local modules that are in the similar format. It can be runned via both docker and singularity containers.
 
-<img src="docs/images/metabiomix_workflow.png" alt="metabiomx workflow overview" width="90%">
+<<p align="center">>
+    <img src="docs/images/metabiomix_workflow.png" alt="metabiomx workflow overview" width="90%">
+</p>
 
 ## Pipeline summary
-The pipeline is able to perform different taxonomic annotation on either (single/paired) reads or contigs. The different subworkflows can be defined via `--bypass_<method>` flags, a full overview is shown by running `--help`.
+The pipeline is able to perform different taxonomic annotation on either (single/paired) reads or contigs. The different subworkflows can be defined via `--bypass_<method>` flags, a full overview is shown by running `--help`. By default the pipeline will check if the right databases are present in the right formats, when the path is provided. If this is not the case, compatible databases will be automatically downloaded.
 
 For both subworkflows the pipeline will perform read trimming via [Trimmomatic](https://github.com/timflutre/trimmomatic) and/or [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval), followed by human removal via [Kneaddata](https://huttenhower.sph.harvard.edu/kneaddata/). Before and after each step the quality control will be assessed via [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) and a [multiqc](https://github.com/MultiQC/MultiQC) report is created as output. Then taxonomy annotation is done as follows:
 

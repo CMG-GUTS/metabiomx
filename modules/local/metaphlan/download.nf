@@ -2,6 +2,7 @@ process METAPHLAN_DOWNLOAD {
     label 'process_single'
 
     input:
+    val(db_name)
     path(db_dir)
 
     output:
@@ -16,14 +17,14 @@ process METAPHLAN_DOWNLOAD {
 
     """
     # Search for any file ending with .bt2l under db_dir
-    BT2_FILE=\$(find -L ${db_dir} -type f -name "*CHOCOPhlAnSGB*.bt2l" -print -quit)
+    BT2_FILE=\$(find -L ${db_dir} -type f -name "${db_name}*" -print -quit)
 
     if [ -n "\$BT2_FILE" ]; then
-        echo ".bt2l file found: \$BT2_FILE"
+        echo "${db_name} file found: \$BT2_FILE"
     else
-        echo "No .bt2l files found."
+        echo "No ${db_name} files found."
         echo "... Downloading latest metaphlan database"
-        metaphlan --install --bowtie2db $db_dir
+        metaphlan --install --index ${db_name} --bowtie2db ${db_dir}
     fi
 
     cat <<-END_VERSIONS > versions.yml
