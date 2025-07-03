@@ -3,11 +3,34 @@
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![nf-test](https://img.shields.io/badge/tested_with-nf--test-337ab7.svg)](https://code.askimed.com/nf-test)
 
-# metaBIOMx `v1.0`
+## Introduction **metaBIOMx**
 
-The new metapipe version 3 is compatible with [NF-core modules](https://github.com/nf-core/modules) and uses both docker and singularity containers. The user is able to save intermediate files, by default only the output from decontamination, read annotation and contig annotation is saved unless specified otherwise. The new MetaPIPE also comes with the option to perform either read or contig annotation. At the moment only a single assembler is used, but in the future multiple assembles can be specified. Making this MetaPipe version 3 a true modularized and adaptable workflow.
+The metagenomics microbiomics pipeline is a best-practice suite for the decontamination and annotation of sequencing data obtained via short-read shotgun sequencing. The pipeline contains [NF-core modules](https://github.com/nf-core/modules) and other local modules that are in the similar format. It can be runned via both docker and singularity containers.
+
+<p align="center">
+    <img src="docs/images/metabiomix_workflow.png" width="90%">
+</p>
+
+## Pipeline summary
+The pipeline is able to perform different taxonomic annotation on either (single/paired) reads or contigs. The different subworkflows can be defined via `--bypass_<method>` flags, a full overview is shown by running `--help`.
+
+For both subworkflows the pipeline will perform read trimming via [Trimmomatic](https://github.com/timflutre/trimmomatic) and/or [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval), followed by human removal via [Kneaddata](https://huttenhower.sph.harvard.edu/kneaddata/). Before and after each step the quality control will be assessed via [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) and a [multiqc](https://github.com/MultiQC/MultiQC) report is created as output. Then taxonomy annotation is done as follows:
+
+* Read annotation
+- paired reads are interleaved using [BBTools](https://archive.jgi.doe.gov/data-and-tools/software-tools/bbtools/).
+- [MetaPhlAn3](https://huttenhower.sph.harvard.edu/metaphlan/) and [HUMAnN3](https://huttenhower.sph.harvard.edu/humann/) are used for taxonomy and functional profiling.
+- taxonomy profiles are merged into a single BIOM file using [biom-format](https://github.com/biocore/biom-format).
+
+* Contig annotation
+- read assembly is performed via [SPAdes](http://cab.spbu.ru/software/spades/).
+- Quality assesment of contigs is done via [Busco](https://busco.ezlab.org/).
+- taxonomy profiles are created using [CAT](https://github.com/dutilh/CAT).
+- Read abundance estimation is performed on the contigs using [Bowtie2]() and [BCFtools](http://samtools.github.io/bcftools/bcftools.html).
+- Contigs are selected if a read can be aligned against a contig and a BIOM file is generated using [biom-format](https://github.com/biocore/biom-format).
 
 ## Installation
+> [!NOTE]
+> Make sure you have installed the latest [nextflow](https://www.nextflow.io/docs/latest/install.html#install-nextflow) version! 
 
 Clone the repository in a directory of your choice:
 ```bash
@@ -36,7 +59,8 @@ nextflow run main.nf \
     -work-dir <work/dir> \
     -profile <singularity,docker>
 ```
-<details open>
+
+<details>
 <summary>Manual database setup</summary>
 
 ### Humann3 DB
@@ -83,7 +107,7 @@ docker run --rm -v $(pwd):/scripts ezlabgva/busco:v5.8.2_cv1 \
 ```
 </details>
 
-<details open>
+<details>
 <summary>nf-test</summary>
 
 nf-test needs to be installed, can be done either from [conda or pip](https://nf-co.re/docs/nf-core-tools/installation).
@@ -93,3 +117,15 @@ nf-test test tests/default.nf.test --wipe-snapshot --update-snapshot --profile d
 nf-test test tests/default.nf.test --profile docker
 ```
 </details>
+
+## Support
+
+If you are having issues, please [create an issue](https://github.com/pysal/spaghetti/issues)
+
+## BibTeX Citation
+
+If you use metaBIOMx in a scientific publication, we would appreciate using the following citations:
+
+```
+
+```
