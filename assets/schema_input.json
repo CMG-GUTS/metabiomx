@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "nf-pipeline-setup - params.input schema",
+    "title": "metabiomx - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
     "items": {
