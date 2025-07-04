@@ -8,7 +8,7 @@
 The metagenomics microbiomics pipeline is a best-practice suite for the decontamination and annotation of sequencing data obtained via short-read shotgun sequencing. The pipeline contains [NF-core modules](https://github.com/nf-core/modules) and other local modules that are in the similar format. It can be runned via both docker and singularity containers.
 
 <p align="center">
-    <img src="docs/images/metabiomix_workflow.png" alt="metabiomx workflow overview" width="90%">
+    <img src="docs/images/metabiomx_workflow.png" alt="workflow" width="90%">
 </p>
 
 ## Pipeline summary
@@ -16,12 +16,12 @@ The pipeline is able to perform different taxonomic annotation on either (single
 
 For both subworkflows the pipeline will perform read trimming via [Trimmomatic](https://github.com/timflutre/trimmomatic) and/or [AdapterRemoval](https://github.com/MikkelSchubert/adapterremoval), followed by human removal via [Kneaddata](https://huttenhower.sph.harvard.edu/kneaddata/). Before and after each step the quality control will be assessed via [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) and a [multiqc](https://github.com/MultiQC/MultiQC) report is created as output. Then taxonomy annotation is done as follows:
 
-* Read annotation
+**Read annotation**
 - paired reads are interleaved using [BBTools](https://archive.jgi.doe.gov/data-and-tools/software-tools/bbtools/).
 - [MetaPhlAn3](https://huttenhower.sph.harvard.edu/metaphlan/) and [HUMAnN3](https://huttenhower.sph.harvard.edu/humann/) are used for taxonomy and functional profiling.
 - taxonomy profiles are merged into a single BIOM file using [biom-format](https://github.com/biocore/biom-format).
 
-* Contig annotation
+**Contig annotation**
 - read assembly is performed via [SPAdes](http://cab.spbu.ru/software/spades/).
 - Quality assesment of contigs is done via [Busco](https://busco.ezlab.org/).
 - taxonomy profiles are created using [CAT](https://github.com/dutilh/CAT).
@@ -34,7 +34,7 @@ For both subworkflows the pipeline will perform read trimming via [Trimmomatic](
 
 Clone the repository in a directory of your choice:
 ```bash
-git clone https://gitlab.cmbi.umcn.nl/rtc-bioinformatics/metapipe.git
+git clone https://github.com/CMG-GUTS/metabiomx.git
 ```
 
 The pipeline is containerised, meaning it can be runned via docker or singularity images. No further actions need to be performed when using the docker profile, except a docker registery needs to be set on your local system, see [docker](https://docs.docker.com/engine/install/). In case singularity is used, please specify the `singularity.cacheDir` in the `nextflow.config` so that singularity images are saved there and re-used again.
@@ -47,10 +47,9 @@ nextflow run main.nf --input 'tests/data/*.fastq.gz' -work-dir work -profile sin
 ```
 
 ## Automatic database setup
-The pipeline requires a set of databases which are used by the different tools within this workflow. The user can setup databases via the `--configure` flag, here it is important to specify the path for each database. The `--configure` argument will check if required database files are missing and will setup the directory structure that is compatible with the other modules. This step can be runned before processing the samples but also in combination with the `--input` and `--reads` flags.
+The pipeline requires a set of databases which are used by the different tools within this workflow. The user is required to specify the location in where the databases will be downloaded. It is also possible to download the databases manually. The `configure` subworkflow will evaluate the database format and presence of the compatible files automatically.
 ```bash
 nextflow run main.nf \
-    --configure \
     --bowtie_db path/to/db/bowtie2 \
     --metaphlan_db path/to/db/metaphlan \
     --humann_db path/to/db/humann \
@@ -63,7 +62,7 @@ nextflow run main.nf \
 <details>
 <summary>Manual database setup</summary>
 
-### Humann3 DB
+### HUMAnN3 and MetaPhlan3 DB
 Make sure the `path/to/db/humann` should contain a `chocophlan`, `uniref` and `utility_mapping` directory. These can be obtained by the following command:
 ```bash
 docker pull biobakery/humann:latest
@@ -71,7 +70,8 @@ docker pull biobakery/humann:latest
 docker run --rm -v $(pwd):/scripts biobakery/humann:latest \
     humann_databases --download chocophlan full ./path/to/db/humann \
     && humann_databases --download uniref uniref90_diamond ./path/to/db/humann \
-    && humann_databases --download utility_mapping full ./path/to/db/humann 
+    && humann_databases --download utility_mapping full ./path/to/db/humann \
+    && metaphlan --install --index mpa_vJun23_CHOCOPhlAnSGB_202403 --bowtie2db ./path/to/db/metaphlan
 ```
 
 ### Kneaddata DB
@@ -107,20 +107,9 @@ docker run --rm -v $(pwd):/scripts ezlabgva/busco:v5.8.2_cv1 \
 ```
 </details>
 
-<details>
-<summary>nf-test</summary>
-
-nf-test needs to be installed, can be done either from [conda or pip](https://nf-co.re/docs/nf-core-tools/installation).
-nf-test has already been initialised for this repository, otherwise this could be done with `nf-test init`. 
-```bash
-nf-test test tests/default.nf.test --wipe-snapshot --update-snapshot --profile docker
-nf-test test tests/default.nf.test --profile docker
-```
-</details>
-
 ## Support
 
-If you are having issues, please [create an issue](https://github.com/pysal/spaghetti/issues)
+If you are having issues, please [create an issue](https://github.com/CMG-GUTS/metabiomx/issues)
 
 ## BibTeX Citation
 
