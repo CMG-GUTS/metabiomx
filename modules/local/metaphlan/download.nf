@@ -24,7 +24,15 @@ process METAPHLAN_DOWNLOAD {
     else
         echo "No ${db_name} files found."
         echo "... Downloading latest metaphlan database"
-        metaphlan --install --index ${db_name} --bowtie2db ${db_dir}
+        wget http://cmprod1.cibio.unitn.it/biobakery4/metaphlan_databases/${db_name}.tar \\
+            && tar -xvf ${db_name}.tar -C ${db_dir} \\
+            && rm ${db_name}.tar
+
+        wget http://cmprod1.cibio.unitn.it/biobakery4/metaphlan_databases/bowtie2_indexes/${db_name}_bt2.tar \\
+            && tar -xvf ${db_name}_bt2.tar -C ${db_dir} \\
+            && rm ${db_name}_bt2.tar
+
+        echo '${db_name}' > ${db_dir}/mpa_latest
     fi
 
     cat <<-END_VERSIONS > versions.yml

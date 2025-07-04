@@ -42,8 +42,8 @@ The pipeline is containerised, meaning it can be runned via docker or singularit
 ## Usage
 Since the latest version, metaBIOMx works with both a samplesheet (CSV) format or a path to the input files. Preferably, samplesheets should be provided.
 ```bash
-nextflow run main.nf --input tests/data/samplesheet.csv -work-dir work -profile singularity
-nextflow run main.nf --input 'tests/data/*.fastq.gz' -work-dir work -profile singularity
+nextflow run main.nf --input <samplesheet.csv> -work-dir work -profile singularity
+nextflow run main.nf --input <'*_{1,R1,2,R2}.{fq,fq.gz,fastq,fastq.gz}'> -work-dir work -profile singularity
 ```
 
 ## Automatic database setup
@@ -70,8 +70,20 @@ docker pull biobakery/humann:latest
 docker run --rm -v $(pwd):/scripts biobakery/humann:latest \
     humann_databases --download chocophlan full ./path/to/db/humann \
     && humann_databases --download uniref uniref90_diamond ./path/to/db/humann \
-    && humann_databases --download utility_mapping full ./path/to/db/humann \
-    && metaphlan --install --index mpa_vJun23_CHOCOPhlAnSGB_202403 --bowtie2db ./path/to/db/metaphlan
+    && humann_databases --download utility_mapping full ./path/to/db/humann
+```
+
+### MetaPhlAn DB
+```bash
+wget http://cmprod1.cibio.unitn.it/biobakery4/metaphlan_databases/mpa_vJun23_CHOCOPhlAnSGB_202403.tar \
+    && tar -xvf mpa_vJun23_CHOCOPhlAnSGB_202403.tar -C path/to/db/metaphlan \
+    && rm mpa_vJun23_CHOCOPhlAnSGB_202403.tar
+
+wget http://cmprod1.cibio.unitn.it/biobakery4/metaphlan_databases/bowtie2_indexes/mpa_vJun23_CHOCOPhlAnSGB_202403_bt2.tar \
+    && tar -xvf mpa_vJun23_CHOCOPhlAnSGB_202403_bt2.tar -C path/to/db/metaphlan \
+    && rm mpa_vJun23_CHOCOPhlAnSGB_202403_bt2.tar
+
+echo 'mpa_vJun23_CHOCOPhlAnSGB_202403' > path/to/db/metaphlan/mpa_latest
 ```
 
 ### Kneaddata DB
