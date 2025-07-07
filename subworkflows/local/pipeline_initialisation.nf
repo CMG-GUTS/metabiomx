@@ -58,25 +58,85 @@ workflow PIPELINE_INITIALISATION {
         nextflow run ${workflow.manifest.mainScript} \\
             -profile <docker/singularity> \\
             -work-dir <workdir> \\
-            --input samplesheet.csv \\
+            --input <samplesheet.csv> \\
             --outdir <outdir>
 
     Description:
         ${workflow.manifest.description ?: "A Metagenomic pipeline for Microbiomics shotgun sequencing data"}
 
-    Mandatory Arguments:
-        --input         Path to samplesheet CSV file
-        --reads         Path to input fastq files
-        --outdir        Path to output directory
-        --singleEnd     Using flag sets singleEnd to true
+    Data Input Options:
+        --input                     Path to samplesheet CSV file
+        --reads                     Path to input fastq files
+        --outdir                    Path to output directory
+        --singleEnd                 Using flag sets singleEnd to true
 
     Profiles:
-        -profile        Configuration profile to use. 
-                        Available: docker, singularity
+        -profile                    Configuration profile to use. 
+                                    Available: docker, singularity
+
+    Key Pipeline Options:
+        --trim_tool                 Trimming tool to use (default: adapterremoval)
+        --custom_adapter_1          Custom adapter sequence 1 (default: none)
+        --custom_adapter_2          Custom adapter sequence 2 (default: none)
+
+     AdapterRemoval settings
+        --adapterremoval_minquality Minimum base quality for AdapterRemoval (default: 5)
+
+     Trimmomatic settings
+        --adapters_file             Path to adapters fasta file for Trimmomatic (default: ${projectDir}/assets/adapters/NexteraPE-PE.fa)
+
+     Bowtie2 settings
+        --bowtie2_opt               Bowtie2 options (default: '--very-sensitive-local --phred33')
+        --bowtie_db                 Path to Bowtie2 database
+
+     MetaPhlAn3 settings
+        --metaphlan_db              Path to MetaPhlAn database
+        --metaphlan_opt             MetaPhlAn options (default: '-t rel_ab_w_read_stats')
+        --metaphlan_db_index        MetaPhlAn database index (default: mpa_vJun23_CHOCOPhlAnSGB_202403)
+
+     HUMAnN3 settings
+        --humann_db                 Path to HUMAnN3 database
+
+     CAT settings
+        --catpack_db                Path to CAT database
+
+     Busco settings
+        --busco_db                  Path to BUSCO database
+        --busco_lineage             BUSCO lineage (default: bacteria_odb12)
+
+    Process Bypass Options:
+        --bypass_trim               Skip read trimming (default: false)
+        --bypass_decon              Skip decontamination (default: false)
+        --bypass_read_annotation    Skip read annotation (default: false)
+        --bypass_assembly           Skip assembly (default: false)
+        --bypass_contig_annotation  Skip contig annotation (default: false)
+
+    File Saving Options:
+        --save_trim_reads           Save trimmed reads (default: false)
+        --save_decon_reads          Save decontaminated reads (default: true)
+        --save_interleaved_reads    Save interleaved reads (default: false)
+        --save_multiqc_reports      Save MultiQC reports (default: true)
+        --save_read_annotation      Save read annotation outputs (default: true)
+        --save_assembly             Save assembly outputs (default: true)
+        --save_contig_annotation    Save contig annotation outputs (default: true)
+
+    Resources Options:
+    --process_low_cpu               Number of cores to allocate for process with low cpu requirement (default: 4)
+    --process_med_cpu               Number of cores to allocate for process with medium cpu requirement (default: 8)
+    --process_high_cpu              Number of cores to allocate for process with high cpu requirement (default: 16)
+    --cpus                          Maximum number of cores to allocate for the global pipeline scope (default: 32)
+
+    For advanced resource customization, see the configuration file:
+        ${projectDir}/conf/base.config
+    or supply your own config file with the -c option:
+        -c path/to/your.config
 
     Other Options:
         --help          Show this help message and exit
         --version       Show the pipeline version and exit
+
+    For additional customization, see the configuration file: 
+        ${projectDir}/nextflow.config
 
     Example Command:
         nextflow run ${workflow.manifest.mainScript} -profile docker --reads '*_{1,2}.fastq.gz' --outdir results
