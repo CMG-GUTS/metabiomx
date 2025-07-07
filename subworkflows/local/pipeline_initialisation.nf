@@ -98,7 +98,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Custom validation for pipeline parameters
     //
-    validateParameters()
+    // validateParameters()
 
     emit:
     versions    = ch_versions
@@ -155,15 +155,15 @@ workflow PIPELINE_COMPLETION {
 //
 // Check and validate pipeline parameters
 //
-def validateParameters() {
-    if ( !params.reads && !params.input && !params.configure) {
-        error("Missing reads and input declaration, one is required.")
-    }
+// def validateParameters() {
+//     if ( !params.reads && !params.input && !params.configure) {
+//         error("Missing reads and input declaration, one is required.")
+//     }
 
-    if ( !params.outdir ) {
-        error("Missing output directory declaration: --outdir` is required.")
-    }
-}
+//     if ( !params.outdir ) {
+//         error("Missing output directory declaration: --outdir` is required.")
+//     }
+// }
 
 
 //

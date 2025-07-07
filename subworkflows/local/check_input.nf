@@ -23,8 +23,6 @@ workflow CHECK_INPUT {
         return tuple(meta, files)
         }
 
-    log.info "meta channel from samplesheet"
-
     } else if (params.reads) {
         sample_ch = Channel
             .fromFilePairs(params.reads, size: params.singleEnd ? 1 : 2, checkIfExists: true)
@@ -40,8 +38,6 @@ workflow CHECK_INPUT {
     } else {
         meta_ch = Channel.empty()
     }
-
-    log.info "meta channel from directory"
 
     emit:
     meta                    = meta_ch
