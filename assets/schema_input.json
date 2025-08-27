@@ -6,7 +6,7 @@
     "items": {
         "type": "object",
         "properties": {
-            "sample": {
+            "sample_id": {
                 "type": "string",
                 "pattern": "^\\S+$",
                 "meta": ["id"],
@@ -27,9 +27,9 @@
                 "errorMessage": "reverse_read needs to be a file path with no spaces.\n\nFile needs to exist!"
             }
         },
-        "required": ["sample", "forward_read"]
+        "required": ["sample_id", "forward_read"]
     },
-    "uniqueEntries": ["sample"],
+    "uniqueEntries": ["sample_id"],
     "dependentRequired": {
         "reverse_read": ["forward_read"]
     }
