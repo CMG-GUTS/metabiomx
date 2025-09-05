@@ -27,6 +27,7 @@
                 "errorMessage": "reverse_read needs to be a file path with no spaces.\n\nFile needs to exist!"
             }
         },
+        "additionalProperties": true,
         "required": ["sample_id", "forward_read"]
     },
     "uniqueEntries": ["sample_id"],

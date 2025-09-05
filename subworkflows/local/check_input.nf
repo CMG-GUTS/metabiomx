@@ -5,6 +5,7 @@
 */
 
 include { samplesheetToList } from 'plugin/nf-schema'
+include { samplesheetToMetadata } from '../../lib/utils.groovy'
 
 workflow CHECK_INPUT {
 
@@ -13,6 +14,7 @@ workflow CHECK_INPUT {
         def input = file("${params.input}", checkIfExists: true)
         def schema = file("${projectDir}/assets/schema_input.json", checkIfExists: true)
         def sample_ch = Channel.fromList(samplesheetToList(input, schema))
+        metadata_ch = Channel.fromList(samplesheetToMetadata(input))
 
         meta_ch = sample_ch.map { arrayList ->
             def sample = arrayList[0]
@@ -35,10 +37,14 @@ workflow CHECK_INPUT {
             meta.single_end = params.singleEnd
             return tuple(meta, files)
         }
+
+        metadata_ch = Channel.empty()
     } else {
+        metadata_ch = Channel.empty()
         meta_ch = Channel.empty()
     }
 
     emit:
     meta                    = meta_ch
+    metadata                = metadata_ch
 }

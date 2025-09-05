@@ -4,11 +4,13 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { save_output } from '../lib/utils.groovy'
 include { CHECK_INPUT } from '../subworkflows/local/check_input.nf'
 include { CONFIGURE } from '../subworkflows/local/configure.nf'
 include { DECONTAMINATION } from '../subworkflows/local/decontamination.nf'
 include { READ_ANNOTATION } from '../subworkflows/local/read_annotation.nf'
 include { CONTIG_ANNOTATION } from '../subworkflows/local/contig_annotation.nf'
+include { REPORT } from '../subworkflows/local/report.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -23,6 +25,11 @@ workflow METABIOMX {
     // Default check-up of databases
     CONFIGURE()
 
+    // Initate empty channels
+    ch_versions = Channel.empty()
+    ch_multiqc_files = Channel.empty()
+    biom_ch = Channel.empty()
+
     if (params.input || params.reads) {
         // If assembly is bypassed, we asssume that input are assemblies itself!
         if (!params.bypass_assembly) {
@@ -30,6 +37,8 @@ workflow METABIOMX {
                 CHECK_INPUT.out.meta,
                 CONFIGURE.out.bowtie_db
             )
+            ch_multiqc_files = ch_multiqc_files.mix(DECONTAMINATION.out.multiqc_files)
+            ch_versions = ch_versions.mix(DECONTAMINATION.out.versions)
 
             // Creates output channel for only clean reads
             ch_decontaminaton = DECONTAMINATION.out.decon
@@ -40,11 +49,6 @@ workflow METABIOMX {
             }
             if (params.save_decon_reads & !params.bypass_decon) {
                 save_output(DECONTAMINATION.out.decon, "decontamination")
-            }
-
-            if (params.save_multiqc_reports) {
-                save_output(DECONTAMINATION.out.multiqc_report, "multiqc")
-                save_output(DECONTAMINATION.out.read_stats, "multiqc")
             }
         } else {
             // Channel contains non-reads, likely assembly files
@@ -57,6 +61,10 @@ workflow METABIOMX {
                 CONFIGURE.out.metaphlan_db,
                 CONFIGURE.out.humann_db
             )
+
+            biom_ch = READ_ANNOTATION.out.metaphlan_biom
+            ch_versions = ch_versions.mix(READ_ANNOTATION.out.versions)
+
             if (params.save_interleaved_reads) {
                 save_output(READ_ANNOTATION.out.interleaved, "interleaved")
             }
@@ -75,6 +83,9 @@ workflow METABIOMX {
                 CONFIGURE.out.catpack_db,
                 CONFIGURE.out.busco_db
             )
+            biom_ch = CONTIG_ANNOTATION.out.biom
+            ch_multiqc_files = ch_multiqc_files.mix(CONTIG_ANNOTATION.out.multiqc_files)
+            ch_versions = ch_versions.mix(CONTIG_ANNOTATION.out.versions)
 
             // OUTPUT CONTIG ANNOTATION
             if (params.save_assembly && !params.bypass_assembly) {
@@ -89,20 +100,19 @@ workflow METABIOMX {
                 save_output(CONTIG_ANNOTATION.out.biom, "CAT_contig")
             }
         }
-    }    
-}
 
-def save_output(input_ch, sub_dir_name) {
-    input_ch.map { item ->
-        def (meta, files) = (item instanceof List && item.size() == 2) ? [item[0], item[1]] : [null, item]
-        def outDir = file("${params.outdir}/${sub_dir_name}")
-        outDir.mkdir()
-        if (files.size() == 2) {
-            files.each { inputFile ->
-               file(inputFile).copyTo(file("${outDir}/${file(inputFile).getName()}"))
+        if (!params.bypass_report) {
+            REPORT(
+                biom_ch,
+                CHECK_INPUT.out.metadata,
+                ch_multiqc_files.collect(),
+                ch_versions.collect()
+            )
+
+            if (params.save_final_reports) {
+                save_output(REPORT.out.analysis_report, "report")
+                save_output(REPORT.out.technical_report, "report")
             }
-        } else {
-            file(files).copyTo(file("${outDir}/${file(files).getName()}"))
         }
-    }
+    }    
 }

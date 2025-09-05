@@ -38,14 +38,37 @@ process BUSCO {
     fi
 
     if [ -f ${prefix}/short_summary.specific.*.*.txt ]; then
-        mv ${prefix}/short_summary.specific.*.*.txt .
+        mv ${prefix}/short_summary.specific.*.*.txt short_summary_${prefix}.txt
     fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        busco: \$(echo \$(busco --version 2>&1))
-        python: \$(echo \$(python --version 2>&1))
-        R: \$(echo \$(R --version 2>&1))
+        busco: \$(busco --version 2> /dev/null | sed 's/BUSCO //g' )
+        python: \$(python --version)
+        R: \$(R --version | head -1)
     END_VERSIONS
+
+    sed -i.bak -E '
+    /^ *python:/ s/(: *).*\\b([0-9]+\\.[0-9]+\\.[0-9]+)\\b.*/\\1 \\2/
+    /^ *R:/ s/(: *).*\\b([0-9]+\\.[0-9]+\\.[0-9]+)\\b.*/\\1 \\2/
+    ' versions.yml
+    """
+    
+    stub:
+    """
+    touch S1_full_table.tsv
+    touch short_summary_S1.txt
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        busco: \$(busco --version 2> /dev/null | sed 's/BUSCO //g' )
+        python: \$(python --version)
+        R: \$(R --version | head -1)
+    END_VERSIONS
+
+    sed -i.bak -E '
+    /^ *python:/ s/(: *).*\\b([0-9]+\\.[0-9]+\\.[0-9]+)\\b.*/\\1 \\2/
+    /^ *R:/ s/(: *).*\\b([0-9]+\\.[0-9]+\\.[0-9]+)\\b.*/\\1 \\2/
+    ' versions.yml
     """
 }

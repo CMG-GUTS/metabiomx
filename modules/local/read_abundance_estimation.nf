@@ -30,13 +30,28 @@ process READ_ABUNDANCE_ESTIMATION {
         -p ${task.cpus} \\
         -x ref \\
         $read_arg \\
-        -S ${prefix}.sam 2> cleaned.log
+        -S ${prefix}.sam 2> ${prefix}_bowtie2.log
 
     samtools view -bS ${prefix}.sam | samtools sort - > ${prefix}.sorted.bam
     samtools index ${prefix}.sorted.bam
 
     samtools idxstats ${prefix}.sorted.bam > ${prefix}.stats
     samtools flagstat ${prefix}.sorted.bam > ${prefix}.flags
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bowtie2: \$(echo \$(bowtie2 --version 2>&1))
+        samtools: \$(echo \$(samtools --version 2>&1))
+    END_VERSIONS
+    """
+
+    stub:
+    """
+    touch S1.sam
+    touch S1.bam
+    touch S1.stats
+    touch S1.flags
+    touch S1.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

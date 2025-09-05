@@ -18,6 +18,7 @@ workflow CONTIG_ANNOTATION {
 
     main:
     ch_versions = Channel.empty()
+    ch_multiqc_files = Channel.empty()
 
     // Assembly via metaSpades
     if (!params.bypass_assembly) {
@@ -26,6 +27,7 @@ workflow CONTIG_ANNOTATION {
             []
         ).scaffolds.set { ch_scaffolds }
 
+        ch_multiqc_files = ch_multiqc_files.mix(SPADES.out.log.collect{ it[1] })
         ch_versions = ch_versions.mix(SPADES.out.versions)
 
     } else {
@@ -37,11 +39,9 @@ workflow CONTIG_ANNOTATION {
         ch_scaffolds,
         busco_db.first()
     )
-    ch_versions = ch_versions.mix(BUSCO.out.versions)
     
-    BUSCO_SUMMARY(
-        BUSCO.out.summary.collect{ it[1] }
-    )
+    ch_versions = ch_versions.mix(BUSCO.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(BUSCO.out.summary.collect{ it[1] })
 
     // Contig Annotation
     CATPACK_CONTIGS(
@@ -58,7 +58,9 @@ workflow CONTIG_ANNOTATION {
             reads,
             ch_scaffolds
         ).stats.set{ ch_read_stats }
+
         ch_versions = ch_versions.mix(READ_ABUNDANCE_ESTIMATION.out.versions)
+        ch_multiqc_files = ch_multiqc_files.mix(READ_ABUNDANCE_ESTIMATION.out.log.collect{ it[1] })
 
         // Combines read count and CAT taxonomy into a BIOM HDF5 file
         CAT_TO_BIOM(
@@ -66,6 +68,7 @@ workflow CONTIG_ANNOTATION {
             ch_read_stats.collect{ it[1] },
             ch_scaffolds.collect{ it[1] }
         ).biom.set{ ch_biom }
+
         ch_versions = ch_versions.mix(CAT_TO_BIOM.out.versions)
     } else {
         // In case assembly is skipped, only 
@@ -73,11 +76,12 @@ workflow CONTIG_ANNOTATION {
     }
 
     emit:
-    assembly_original  = ch_scaffolds
-    assembly_renamed   = CAT_TO_BIOM.out.renamed_scaffolds
-    assembly_combined  = CAT_TO_BIOM.out.combined_scaffolds
-    assembly_qc_fig    = BUSCO_SUMMARY.out.busco_figure
-    assembly_qc_raw    = BUSCO.out.summary
-    biom               = ch_biom
-    versions           = ch_versions
+    assembly_original   = ch_scaffolds
+    assembly_renamed    = CAT_TO_BIOM.out.renamed_scaffolds
+    assembly_combined   = CAT_TO_BIOM.out.combined_scaffolds
+    assembly_qc_fig     = BUSCO_SUMMARY.out.busco_figure
+    assembly_qc_raw     = BUSCO.out.summary
+    multiqc_files       = ch_multiqc_files
+    biom                = ch_biom
+    versions            = ch_versions
 }

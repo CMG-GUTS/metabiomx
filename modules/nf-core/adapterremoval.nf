@@ -41,7 +41,6 @@ process ADAPTERREMOVAL {
             if [ -f "\${1}" ]; then
                 mv "\${1}" "\${1::-3}.fastq.gz"
             fi
-
         }
 
         ensure_fastq '${prefix}.truncated.gz'
