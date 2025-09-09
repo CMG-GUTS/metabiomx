@@ -62,7 +62,7 @@ workflow METABIOMX {
                 CONFIGURE.out.humann_db
             )
 
-            biom_ch = READ_ANNOTATION.out.metaphlan_biom
+            biom_ch = biom_ch.mix(READ_ANNOTATION.out.metaphlan_biom)
             ch_versions = ch_versions.mix(READ_ANNOTATION.out.versions)
 
             if (params.save_interleaved_reads) {
@@ -83,7 +83,7 @@ workflow METABIOMX {
                 CONFIGURE.out.catpack_db,
                 CONFIGURE.out.busco_db
             )
-            biom_ch = CONTIG_ANNOTATION.out.biom
+            biom_ch = biom_ch.mix(CONTIG_ANNOTATION.out.biom)
             ch_multiqc_files = ch_multiqc_files.mix(CONTIG_ANNOTATION.out.multiqc_files)
             ch_versions = ch_versions.mix(CONTIG_ANNOTATION.out.versions)
 

@@ -18,14 +18,14 @@ workflow REPORT {
     ch_versions
 
     main:
-    metadata.view()
+
     if (metadata) {
         CREATE_ANALYSIS_MAPPING(
             metadata
         ).mapping.set{ metadata_ch }
 
         OMICFLOW(
-            metadata_ch,
+            metadata_ch.first(),
             biom,
             []
         ).report.set{ omicflow_report }
