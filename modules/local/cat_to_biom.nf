@@ -27,7 +27,7 @@ process CAT_TO_BIOM {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python3.11 --version 2>&1 | awk '{print \$3}')
+        python: \$(python3.11 --version | sed -e "s/Python //g")
     END_VERSIONS
     """
 
@@ -39,7 +39,7 @@ process CAT_TO_BIOM {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python3.11 --version 2>&1 | awk '{print \$3}')
+        python: \$(python3.11 --version | sed -e "s/Python //g")
     END_VERSIONS
     """
 }

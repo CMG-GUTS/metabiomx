@@ -18,10 +18,7 @@ workflow REPORT {
     ch_versions
 
     main:
-
-    BIOTAVIZ(biom)
-    ch_versions = ch_versions.mix(BIOTAVIZ.out.versions)        
-
+    metadata.view()
     if (metadata) {
         CREATE_ANALYSIS_MAPPING(
             metadata
@@ -29,14 +26,14 @@ workflow REPORT {
 
         OMICFLOW(
             metadata_ch,
-            biom
+            biom,
+            []
         ).report.set{ omicflow_report }
         ch_versions = ch_versions.mix(OMICFLOW.out.versions)
 
     } else {
         omicflow_report = Channel.empty()
     }
-
     // Combine all versions
     ch_versions_parsed = ch_versions.collect().map { fileList ->
         def all_versions = []

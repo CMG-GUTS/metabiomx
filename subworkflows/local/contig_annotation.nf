@@ -5,7 +5,6 @@
 */
 include { SPADES } from                         '../../modules/nf-core/spades.nf'
 include { BUSCO } from                          '../../modules/local/busco/busco.nf'
-include { BUSCO_SUMMARY } from                  '../../modules/local/busco/summary.nf'
 include { CATPACK_CONTIGS } from                '../../modules/nf-core/cat_pack/contigs.nf'
 include { READ_ABUNDANCE_ESTIMATION } from      '../../modules/local/read_abundance_estimation.nf'
 include { CAT_TO_BIOM } from                    '../../modules/local/cat_to_biom.nf'
@@ -79,8 +78,6 @@ workflow CONTIG_ANNOTATION {
     assembly_original   = ch_scaffolds
     assembly_renamed    = CAT_TO_BIOM.out.renamed_scaffolds
     assembly_combined   = CAT_TO_BIOM.out.combined_scaffolds
-    assembly_qc_fig     = BUSCO_SUMMARY.out.busco_figure
-    assembly_qc_raw     = BUSCO.out.summary
     multiqc_files       = ch_multiqc_files
     biom                = ch_biom
     versions            = ch_versions

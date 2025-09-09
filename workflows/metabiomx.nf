@@ -92,9 +92,6 @@ workflow METABIOMX {
                 save_output(CONTIG_ANNOTATION.out.assembly_original, "assembly/original")
                 save_output(CONTIG_ANNOTATION.out.assembly_renamed, "assembly/renamed")
                 save_output(CONTIG_ANNOTATION.out.assembly_combined, "assembly")
-                save_output(CONTIG_ANNOTATION.out.assembly_qc_fig, "assembly")
-                save_output(CONTIG_ANNOTATION.out.assembly_qc_raw, "assembly/busco_summaries")
-
             }
             if (params.save_contig_annotation) {
                 save_output(CONTIG_ANNOTATION.out.biom, "CAT_contig")

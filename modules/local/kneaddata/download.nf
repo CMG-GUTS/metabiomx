@@ -31,6 +31,10 @@ process KNEADDATA_DOWNLOAD {
     "${task.process}":
         kneaddata: \$(echo \$(kneaddata --version 2>&1))
     END_VERSIONS
+
+    sed -i.bak -E '
+    /^ *kneaddata:/ s/(: *).*\\b([0-9]+\\.[0-9]+\\.[0-9]+)\\b.*/\\1 \\2/
+    ' versions.yml
     """
 
     stub:

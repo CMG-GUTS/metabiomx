@@ -4,15 +4,21 @@
     This is started with the `--download` argument.
     
 */
-include { KNEADDATA_DOWNLOAD } from '../../modules/local/kneaddata/download.nf'
-include { METAPHLAN_DOWNLOAD } from '../../modules/local/metaphlan/download.nf'
-include { HUMANN_DOWNLOAD } from '../../modules/local/humann/download.nf'
-include { BUSCO_DOWNLOAD } from '../../modules/local/busco/download.nf'
-include { CATPACK_DOWNLOAD } from '../../modules/nf-core/cat_pack/download.nf'
-// include { }
+include { KNEADDATA_DOWNLOAD } from     '../../modules/local/kneaddata/download.nf'
+include { METAPHLAN_DOWNLOAD } from     '../../modules/local/metaphlan/download.nf'
+include { HUMANN_DOWNLOAD } from        '../../modules/local/humann/download.nf'
+include { BUSCO_DOWNLOAD } from         '../../modules/local/busco/download.nf'
+include { CATPACK_DOWNLOAD } from       '../../modules/nf-core/cat_pack/download.nf'
+include { ensureDir } from              '../../lib/utils.groovy'
 
 workflow CONFIGURE {
     main:
+
+    kneaddata_db_ch = Channel.empty()
+    metaphlan_db_ch = Channel.empty()
+    humann_db_ch = Channel.empty()
+    busco_db_ch = Channel.empty()
+    catpack_db_ch = Channel.empty()
 
     // KNEADDATA DB DEPENDENCIES
     if (params.bowtie_db) {
@@ -25,7 +31,6 @@ workflow CONFIGURE {
             ).db_dir_out.set{ kneaddata_db_ch }
         }
     } else if (params.bypass_decon) {
-        kneaddata_db_ch = Channel.empty()
         log.warn("The database configuration for 'params.bowtie_db' is skipped due to '--bypass_decon'")
 
     } else {
@@ -49,8 +54,6 @@ workflow CONFIGURE {
         }
 
     } else if (params.bypass_read_annotation) {
-        metaphlan_db_ch = Channel.empty()
-        humann_db_ch = Channel.empty()
         log.warn("The database configuration for 'params.metaphlan_db' and 'params.humann_db' are skipped due to '--bypass_read_annotation'")
 
     } else {
@@ -75,8 +78,6 @@ workflow CONFIGURE {
             ).db_dir_out.set{ catpack_db_ch }
         }
     } else if (params.bypass_contig_annotation) {
-        busco_db_ch = Channel.empty()
-        catpack_db_ch = Channel.empty()
         log.warn("The database configuration for 'params.busco_db' and 'params.catpack_db' are skipped due to '--bypass_contig_annotation'")
 
     } else {
@@ -89,12 +90,4 @@ workflow CONFIGURE {
     humann_db               = humann_db_ch
     busco_db                = busco_db_ch
     catpack_db              = catpack_db_ch
-}
-
-def ensureDir(String dirPath) {
-    def dir = file(dirPath)
-    if (!dir.exists()) {
-        dir.mkdirs()
-    }
-    return Channel.fromPath(dirPath)
 }

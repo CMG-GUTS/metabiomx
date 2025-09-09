@@ -57,7 +57,17 @@ process KNEADDATA {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        kneaddata: \$(echo \$(kneaddata --version 2>&1))
+        kneaddata: \$(kneaddata --version 2>&1 | sed -e "s/kneaddata v //g")
+    END_VERSIONS
+
+    """
+
+    stub:
+    def args = task.ext.args ?: ''
+    """
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        kneaddata: \$(kneaddata --version 2>&1 | sed -e "s/kneaddata v //g")
     END_VERSIONS
     """
 }

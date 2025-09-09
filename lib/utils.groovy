@@ -45,3 +45,11 @@ def samplesheetToMetadata(input) {
 
     return [rows]
 }
+
+def ensureDir(String dirPath) {
+    def dir = file(dirPath)
+    if (!dir.exists()) {
+        dir.mkdirs()
+    }
+    return Channel.fromPath(dirPath)
+}

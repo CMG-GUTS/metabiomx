@@ -3,6 +3,9 @@ report_comment: >
   target="_blank"><MetaBIOMx</a> analysis pipeline.
 
 table_sample_merge:
+  "input": "_raw"
+  "trimmed": "_trim"
+  "decon": "_decon"
   "R1": "_1"
   "R2": "_2"
   "trim": ".settings"
@@ -21,17 +24,17 @@ run_modules:
 
 top_modules:
   - "fastqc":
-      name: "FastQC: raw reads"
+      name: "FastQC: Input Reads"
       path_filters:
-        - "*_fastqc.zip"
+        - "*_raw*fastqc.zip"
   - "fastqc":
-      name: "FastQC: trimmed reads"
+      name: "FastQC: Trimmed Reads"
       path_filters:
-        - "*_trim_*_fastqc.zip"
+        - "*_trim*fastqc.zip"
   - "fastqc":
-      name: "FastQC: Host removed reads"
+      name: "FastQC: Host Removed Reads"
       path_filters:
-        - "*_decon_*_fastqc.zip"
+        - "*_decon*fastqc.zip"
   - "adapterremoval":
       name: "Read trimming via AdapterRemoval"
       path_filters:
@@ -47,21 +50,21 @@ top_modules:
   - custom_content
 
 table_columns_name:
-  "FastQC: raw reads":
-    percent_duplicates: "% Dups (raw)"
-    percent_gc: "% GC (raw)"
-    avg_sequence_length: "Avg. length (raw)"
-    median_sequence_length: "Median length (raw)"
-    total_sequences: "M Seqs (raw)"
-    percent_fails: "% Fails (raw)"
-  "FastQC: trimmed reads":
+  "FastQC: Input Reads":
+    percent_duplicates: "% Dups (input)"
+    percent_gc: "% GC (input)"
+    avg_sequence_length: "Avg. length (input)"
+    median_sequence_length: "Median length (input)"
+    total_sequences: "M Seqs (input)"
+    percent_fails: "% Fails (input)"
+  "FastQC: Trimmed Reads":
     percent_duplicates: "% Dups (trim)"
     percent_gc: "% GC (trim)"
     avg_sequence_length: "Avg. length (trim)"
     median_sequence_length: "Median length (trim)"
     total_sequences: "M Seqs (trim)"
     percent_fails: "% Fails (trim)"
-  "FastQC: Host removed reads":
+  "FastQC: Host Removed Reads":
     percent_duplicates: "% Dups (decon)"
     percent_gc: "% GC (decon)"
     avg_sequence_length: "Avg. length (decon)"
@@ -78,24 +81,6 @@ extra_fn_clean_exts:
     module: adapterremoval
 
 custom_data:
-  dada2_stats:
-    file_format: "tsv"
-    section_name: "DADA2 Read Stats"
-    descrition: "Read statistics of DADA2 filtering, denoising and removal of chimeric reads"
-    plot_type: "table"
-    pconfig:
-      headers:
-        - sample
-        - input
-        - filtered
-        - denoised
-        - nonchim
-  dada2_profiles:
-    file_format: "png"
-    parent_id: dada2_stats
-    section_name: "Error Profiles"
-    description: "Learned Error rates from the first batch"
-    plot_type: "image"
   pipeline_parameters:
     file_format: "tsv"
     section_name: "Pipeline parameters"

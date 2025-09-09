@@ -8,12 +8,7 @@ include { ADAPTERREMOVAL } from '../../modules/nf-core/adapterremoval.nf'
 include { FASTQC as FASTQC_reads } from '../../modules/nf-core/fastqc.nf'
 include { FASTQC as FASTQC_trim } from '../../modules/nf-core/fastqc.nf'
 include { FASTQC as FASTQC_decon } from '../../modules/nf-core/fastqc.nf'
-
 include { KNEADDATA } from '../../modules/local/kneaddata/kneaddata.nf'
-include { MULTIQC as MULTIQC_reads } from '../../modules/nf-core/multiqc.nf'
-include { MULTIQC as MULTIQC_trim } from '../../modules/nf-core/multiqc.nf'
-include { MULTIQC as MULTIQC_decon } from '../../modules/nf-core/multiqc.nf'
-include { MERGE_MULTIQC_STATS } from '../../modules/local/merge_multiqc_stats.nf'
 
 workflow DECONTAMINATION {
     take:
