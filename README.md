@@ -82,6 +82,12 @@ Example:
 |----------------|--------|----------------------------------------------------------------------------------------------------|
 | `reverse_read` | string | File path to reverse sequencing read. Same constraints as `forward_read`. Required if specified.   |
 
+#### 🔹 Pattern‑based columns 
+You can define extra variables using special prefixes:
+- **`CONTRAST_...`** → grouping/category labels used in differential comparisons  
+  Example: `CONTRAST_Treatment` with values `Drug` / `Placebo`
+These prefixes are used to generate an automated `OmicFlow` report with alpha, beta diversity and compositional plots. For more information see [OmicFlow](https://github.com/agusinac/OmicFlow).
+
 ### Example cases
 #### 🔹 Read annotation
 ```bash
