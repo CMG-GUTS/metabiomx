@@ -58,6 +58,10 @@
 
   > Daniel McDonald, Jose C Clemente, Justin Kuczynski, Jai Ram Rideout, Jesse Stombaugh, Doug Wendel, Andreas Wilke, Susan Huse, John Hufnagle, Folker Meyer, Rob Knight, J Gregory Caporaso, The Biological Observation Matrix (BIOM) format or: how I learned to stop worrying and love the ome-ome, GigaScience, Volume 1, Issue 1, December 2012, 2047–217X–1–7, https://doi.org/10.1186/2047-217X-1-7
 
+- [OmicFlow](https://cran.r-project.org/package=OmicFlow)
+
+  > Gusinac A, Ederveen T, Boleij A (2025). OmicFlow: Fast and Efficient (Automated) Analysis of Sparse Omics Data. R package version 1.3.1, https://CRAN.R-project.org/package=OmicFlow.
+
 ## Software packaging/containerisation tools
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
 

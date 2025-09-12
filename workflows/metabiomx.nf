@@ -4,13 +4,13 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { save_output } from '../lib/utils.groovy'
-include { CHECK_INPUT } from '../subworkflows/local/check_input.nf'
-include { CONFIGURE } from '../subworkflows/local/configure.nf'
-include { DECONTAMINATION } from '../subworkflows/local/decontamination.nf'
-include { READ_ANNOTATION } from '../subworkflows/local/read_annotation.nf'
-include { CONTIG_ANNOTATION } from '../subworkflows/local/contig_annotation.nf'
-include { REPORT } from '../subworkflows/local/report.nf'
+include { save_output } from            '../lib/utils.groovy'
+include { CHECK_INPUT } from            '../subworkflows/local/check_input.nf'
+include { CONFIGURE } from              '../subworkflows/local/configure.nf'
+include { DECONTAMINATION } from        '../subworkflows/local/decontamination.nf'
+include { READ_ANNOTATION } from        '../subworkflows/local/read_annotation.nf'
+include { CONTIG_ANNOTATION } from      '../subworkflows/local/contig_annotation.nf'
+include { REPORT } from                 '../subworkflows/local/report.nf'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,7 +28,8 @@ workflow METABIOMX {
     // Initate empty channels
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
-    biom_ch = Channel.empty()
+    biom_read_anot = Channel.empty()
+    biom_contig_anot = Channel.empty()
 
     if (params.input || params.reads) {
         // If assembly is bypassed, we asssume that input are assemblies itself!
@@ -62,7 +63,7 @@ workflow METABIOMX {
                 CONFIGURE.out.humann_db
             )
 
-            biom_ch = biom_ch.mix(READ_ANNOTATION.out.metaphlan_biom)
+            biom_read_anot = READ_ANNOTATION.out.metaphlan_biom
             ch_versions = ch_versions.mix(READ_ANNOTATION.out.versions)
 
             if (params.save_interleaved_reads) {
@@ -83,7 +84,7 @@ workflow METABIOMX {
                 CONFIGURE.out.catpack_db,
                 CONFIGURE.out.busco_db
             )
-            biom_ch = biom_ch.mix(CONTIG_ANNOTATION.out.biom)
+            biom_contig_anot = CONTIG_ANNOTATION.out.biom
             ch_multiqc_files = ch_multiqc_files.mix(CONTIG_ANNOTATION.out.multiqc_files)
             ch_versions = ch_versions.mix(CONTIG_ANNOTATION.out.versions)
 
@@ -100,15 +101,20 @@ workflow METABIOMX {
 
         if (!params.bypass_report) {
             REPORT(
-                biom_ch,
+                biom_read_anot,
+                biom_contig_anot,
                 CHECK_INPUT.out.metadata,
-                ch_multiqc_files.collect(),
-                ch_versions.collect()
+                ch_multiqc_files,
+                ch_versions
             )
 
             if (params.save_final_reports) {
-                save_output(REPORT.out.analysis_report, "report")
                 save_output(REPORT.out.technical_report, "report")
+                if (REPORT.out.read_report)
+                    save_output(REPORT.out.read_report, "report")
+
+                if (REPORT.out.contig_report)
+                    save_output(REPORT.out.contig_report, "report")
             }
         }
     }    

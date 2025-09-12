@@ -48,10 +48,27 @@ process HUMANN3 {
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        humann3: \$(humann --version 2>&1 | awk '{print \$3}')
+        humann3: \$(humann3 --version | sed -e "s/humann v//g")
         diamond: \$(diamond --version 2>&1 | awk '{print \$3}')
         metaphlan3: \$(metaphlan --version 2>&1 | awk '{print \$3}')
-        bowtie2: \$(bowtie2 --version 2>&1 | awk '{print \$3}')
+        bowtie2: \$(bowtie2 --version 2>&1 | head -1 | awk '{print \$3}')
+    END_VERSIONS
+    """
+
+    stub:
+    def args = task.ext.args ?: ''
+    """
+    touch S1_genefamilies.tsv
+    touch S1_pathabundance.tsv
+    touch S1_pathcoverage.tsv
+    touch S1_metaphlan_bugs_list.tsv 
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        humann3: \$(humann3 --version | sed -e "s/humann v//g")
+        diamond: \$(diamond --version 2>&1 | awk '{print \$3}')
+        metaphlan3: \$(metaphlan --version 2>&1 | awk '{print \$3}')
+        bowtie2: \$(bowtie2 --version 2>&1 | head -1 | awk '{print \$3}')
     END_VERSIONS
     """
 }

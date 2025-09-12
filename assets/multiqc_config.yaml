@@ -82,25 +82,15 @@ extra_fn_clean_exts:
 
 custom_data:
   pipeline_parameters:
-    file_format: "tsv"
+    file_format: "yaml"
     section_name: "Pipeline parameters"
     description: "Specified input parameters by the nextflow pipeline. Also non-default software options"
     plot_type: "table"
     pconfig:
       headers:
-        - Parameter
-        - Value
-  versions:
-    file_format: "tsv"
-    section_name: "Pipeline software versions"
-    plot_type: "table"
-    pconfig:
-      headers:
-        - Software
-        - Version
+        - Param
+        - Val
 
 sp:
   pipeline_parameters:
-    fn: "pipeline_params.tsv"
-  versions:
-    fn: "software_versions.tsv"
+    fn: "params_summary_mqc.yml"

@@ -53,3 +53,16 @@ def ensureDir(String dirPath) {
     }
     return Channel.fromPath(dirPath)
 }
+
+def paramsMap(params) {
+    def yaml = new org.yaml.snakeyaml.Yaml()
+    def param_map = params.collect { k, v ->
+        def valueString = v.toString().replaceAll('[\\n\\r]', ' ')
+        [k, valueString]
+    }.collectEntries { pair -> 
+        def key = pair[0]
+        def val = pair[1]
+        [key, val.toString()]
+    }
+    return(yaml.dumpAsMap(param_map).trim())
+}

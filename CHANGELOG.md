@@ -3,6 +3,21 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.0 - [2025-09-]
+
+### `Added`
+- [#1](https://github.com/CMG-GUTS/metabiomx/issues/1) `OmicFlow` report generation for both read and contig annotation subworkflows
+- [#2](https://github.com/CMG-GUTS/metabiomx/issues/2) Combined all QC software files into a single MultiQC with `multiqc_config.yaml`
+- subworkflow that contains post-analysis and technical reports
+- Versions are compatible with nf-core and using `softwareVersionsToYAML` function
+
+### `Fixed`
+- Version formatting of `bowtie2`, `kneaddata` and `humann3`
+
+### `Deprecated`
+- `merge_multiqc_stats`
+- `busco_summary` is now part of `MultiQC`
+
 ## v1.0.1 - [2025-08-27]
 
 ### `Added`
@@ -39,7 +54,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 - [#6](https://gitlab.cmbi.umcn.nl/rtc-bioinformatics/metapipe/-/issues/6) duplicate headers from spades
-
-### `Dependencies`
-
-### `Deprecated`
