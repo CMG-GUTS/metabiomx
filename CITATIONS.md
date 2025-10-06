@@ -60,7 +60,7 @@
 
 - [OmicFlow](https://cran.r-project.org/package=OmicFlow)
 
-  > Gusinac A, Ederveen T, Boleij A (2025). OmicFlow: Fast and Efficient (Automated) Analysis of Sparse Omics Data. R package version 1.3.1, https://CRAN.R-project.org/package=OmicFlow.
+  > Gusinac A, Ederveen T, Boleij A (2025). OmicFlow: Fast and Efficient (Automated) Analysis of Sparse Omics Data. R package version 1.3.2, https://CRAN.R-project.org/package=OmicFlow.
 
 ## Software packaging/containerisation tools
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)

@@ -3,12 +3,12 @@
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![nf-test](https://img.shields.io/badge/tested_with-nf--test-337ab7.svg)](https://code.askimed.com/nf-test)
 
-## Introduction **metaBIOMx**
+## Introduction: **metaBIOMx**
 
 The metagenomics microbiomics pipeline is a best-practice suite for the decontamination and annotation of sequencing data obtained via short-read shotgun sequencing. The pipeline contains [NF-core modules](https://github.com/nf-core/modules) and other local modules that are in the similar format. It can be runned via both docker and singularity containers.
 
 <p align="center">
-    <img src="docs/images/metabiomx_workflow.png" alt="workflow" width="90%">
+    <img src="docs/images/metabiomx_v1.1_drawio.png" alt="workflow" width="90%">
 </p>
 
 ## Pipeline summary
