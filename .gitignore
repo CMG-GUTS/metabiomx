@@ -10,8 +10,6 @@ cache/
 nf-test.config
 conf/test.config
 containers/singularity/*
-assets/sendmail_template.txt
-assets/email_template.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
