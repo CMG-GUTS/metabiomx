@@ -54,54 +54,42 @@ workflow PIPELINE_INITIALISATION {
     ${workflow.manifest.name.toUpperCase()} v${workflow.manifest.version}
     =============================================
 
-    Usage:
-        nextflow run ${workflow.manifest.mainScript} \\
-            -profile <docker/singularity> \\
-            -work-dir <workdir> \\
-            --input <samplesheet.csv> \\
-            --outdir <outdir>
-
     Description:
         ${workflow.manifest.description ?: "A Metagenomic pipeline for Microbiomics shotgun sequencing data"}
 
     Data Input Options:
-        --input                     Path to samplesheet CSV file
-        --reads                     Path to input fastq files
-        --outdir                    Path to output directory
-        --singleEnd                 Using flag sets singleEnd to true
+        --input                     Path to samplesheet CSV file (default: null)
+        --reads                     Path to input fastq files (default: null)
+        --outdir                    Path to output directory (default: '.')
+        --singleEnd                 Using flag sets singleEnd to true (default: false)
 
     Profiles:
         -profile                    Configuration profile to use. 
-                                    Available: docker, singularity
+                                    Available: docker,singularity
 
     Key Pipeline Options:
         --trim_tool                 Trimming tool to use (default: adapterremoval)
-        --custom_adapter_1          Custom adapter sequence 1 (default: none)
-        --custom_adapter_2          Custom adapter sequence 2 (default: none)
+        --custom_adapter_1          Custom adapter sequence 1 (default: null)
+        --custom_adapter_2          Custom adapter sequence 2 (default: null)
 
-     AdapterRemoval settings
-        --adapterremoval_minquality Minimum base quality for AdapterRemoval (default: 5)
-
-     Trimmomatic settings
-        --adapters_file             Path to adapters fasta file for Trimmomatic (default: ${projectDir}/assets/adapters/NexteraPE-PE.fa)
-
-     Bowtie2 settings
-        --bowtie2_opt               Bowtie2 options (default: '--very-sensitive-local --phred33')
-        --bowtie_db                 Path to Bowtie2 database
-
-     MetaPhlAn3 settings
-        --metaphlan_db              Path to MetaPhlAn database
+    Software non-default settings
+        --multiqc_config            Path to custom multiqc yaml file (default: '$projectDir/assets/multiqc_config.yaml')
+        --bowtie2_opt               Bowtie2 options for kneaddata (default: '--very-sensitive-local --phred33')
         --metaphlan_opt             MetaPhlAn options (default: '-t rel_ab_w_read_stats')
+        --trimmomatic_opt           Trimmomatic options (default: 'MINLEN:60 ILLUMINACLIP:$params.adapters_file:2:30:10:8:TRUE SLIDINGWINDOW:4:20 MINLEN:75')
+        --adapterremoval_opt        AdapterRemoval2 options (default: '--trimqualities --minquality 5')
+        --adapters_file             Path to adapters fasta file for Trimmomatic (default: '$projectDir/assets/adapters/NexteraPE-PE.fa')
+        --spades_opt                SPAdes options (default: '--meta')
+        --filter_bacteria           OmicFlow option to filter string-matching bacteria (default: 'bacterium, uncultured')
+        --coverage_threshold        OmicFlow option to filter CAT annotations (default: '0.8')
+
+    Software database paths              
+        --bowtie_db                 Path to Bowtie2 database (default: null)
+        --metaphlan_db              Path to MetaPhlAn database (default: null)
         --metaphlan_db_index        MetaPhlAn database index (default: mpa_vJun23_CHOCOPhlAnSGB_202403)
-
-     HUMAnN3 settings
-        --humann_db                 Path to HUMAnN3 database
-
-     CAT settings
-        --catpack_db                Path to CAT database
-
-     Busco settings
-        --busco_db                  Path to BUSCO database
+        --humann_db                 Path to HUMAnN3 database (default: null)
+        --catpack_db                Path to CAT_pack database (default: null)
+        --busco_db                  Path to BUSCO database (default: null)
         --busco_lineage             BUSCO lineage (default: bacteria_odb12)
 
     Process Bypass Options:
@@ -110,6 +98,7 @@ workflow PIPELINE_INITIALISATION {
         --bypass_read_annotation    Skip read annotation (default: false)
         --bypass_assembly           Skip assembly (default: false)
         --bypass_contig_annotation  Skip contig annotation (default: false)
+        --bypass_report             Skip OmicFlow & MultiQC reports (default: false)
 
     File Saving Options:
         --save_trim_reads           Save trimmed reads (default: false)
@@ -119,12 +108,13 @@ workflow PIPELINE_INITIALISATION {
         --save_read_annotation      Save read annotation outputs (default: true)
         --save_assembly             Save assembly outputs (default: true)
         --save_contig_annotation    Save contig annotation outputs (default: true)
+        --save_final_reports        Save OmicFlow & MultiQC reports (default: true)
 
     Resources Options:
-    --process_low_cpu               Number of cores to allocate for process with low cpu requirement (default: 4)
-    --process_med_cpu               Number of cores to allocate for process with medium cpu requirement (default: 8)
-    --process_high_cpu              Number of cores to allocate for process with high cpu requirement (default: 16)
-    --cpus                          Maximum number of cores to allocate for the global pipeline scope (default: 32)
+        --process_low_cpu           Number of cores to allocate for process with low cpu requirement (default: 4)
+        --process_med_cpu           Number of cores to allocate for process with medium cpu requirement (default: 8)
+        --process_high_cpu          Number of cores to allocate for process with high cpu requirement (default: 16)
+        --cpus                      Maximum number of cores to allocate for the global pipeline scope (default: 32)
 
     For advanced resource customization, see the configuration file:
         ${projectDir}/conf/base.config
@@ -145,14 +135,20 @@ workflow PIPELINE_INITIALISATION {
     For more information, visit: ${workflow.manifest.homePage}
     """.stripIndent()
     
-    workflow_command = "nextflow run ${workflow.manifest.mainScript} -profile <docker/singularity/.../institute> --reads samplesheet.csv --outdir <OUTDIR>"
+    workflow_command = """
+    nextflow run ${workflow.manifest.mainScript} \\
+        -profile <docker,singularity> \\
+        -work-dir <workdir> \\
+        --input <samplesheet.csv> \\
+        --outdir <outdir>
+    """
     UTILS_NFVALIDATION_PLUGIN (
         help,
         workflow_command,
         pre_help_text,
         post_help_text,
         validate_params,
-        "nextflow_schema.json"
+        []
     )
 
     //
