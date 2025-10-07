@@ -200,7 +200,7 @@ If you are having issues, please [create an issue](https://github.com/CMG-GUTS/m
 
 ## Citations
 
-You can cite the `metabiomx` using the following DOI: https://doi.org/10.48546/workflowhub.workflow.1787.5
+You can cite the `metabiomx` using the following DOI: https://doi.org/10.48546/workflowhub.workflow.1787.6
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md)
 file.
