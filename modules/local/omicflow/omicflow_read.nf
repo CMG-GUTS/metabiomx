@@ -55,8 +55,8 @@ process OMICFLOW_read {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        R: \$(R --version)
-        OmicFlow: \$(Rscript -e 'cat(as.character(packageVersion("OmicFlow")))')
+        R: stub-version
+        OmicFlow: stub-version
     END_VERSIONS
     """
 }

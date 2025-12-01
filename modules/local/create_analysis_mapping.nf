@@ -25,4 +25,9 @@ process CREATE_ANALYSIS_MAPPING {
     echo "${header}" > metadata.tsv
     echo "${rows_str}" >> metadata.tsv
     """
+
+    stub:
+    """
+    touch metadata.tsv
+    """
 }

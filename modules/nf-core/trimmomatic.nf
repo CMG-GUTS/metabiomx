@@ -43,25 +43,16 @@ process TRIMMOMATIC {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-
-    if (meta.single_end) {
-        output_command = "echo '' | gzip > ${prefix}_SE_paired.trim.fastq.gz"
-    } else {
-        output_command  = "echo '' | gzip > ${prefix}_paired_trim_1.fastq.gz\n"
-        output_command += "echo '' | gzip > ${prefix}_paired_trim_2.fastq.gz\n"
-        output_command += "echo '' | gzip > ${prefix}_unpaired_trim_1.fastq.gz\n"
-        output_command += "echo '' | gzip > ${prefix}_unpaired_trim_2.fastq.gz"
-    }
-
     """
-    $output_command
-    touch ${prefix}.summary
-    touch ${prefix}_trim.log
-    touch ${prefix}_out.log
+    touch "${prefix}_paired_trim_1.fastq.gz"
+    touch "${prefix}_paired_trim_2.fastq.gz"
+    touch "${prefix}.summary"
+    touch "${prefix}_trim.log"
+    touch "${prefix}_out.log"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        trimmomatic: \$(trimmomatic -version)
+        trimmomatic: stub-version
     END_VERSIONS
     """
 

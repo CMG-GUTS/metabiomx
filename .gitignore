@@ -1,14 +1,14 @@
 # Private folders
 work/
 results/
-tests/
+tests/db
+tests/result
 nextflow/
 .nextflow*
 .nf-test
 .sendmail*
 cache/
 nf-test.config
-conf/test.config
 containers/singularity/*
 
 # Byte-compiled / optimized / DLL files

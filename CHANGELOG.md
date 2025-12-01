@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.1 - [2025-12-02]
+
+### `Added`
+- Included test data for only `-stub-run`. Test data is not compatible for a proper full run!
+
+### `Fixed`
+- `OmicFlow` docker issue 
+
 ## v1.1.0 - [2025-10-07]
 
 ### `Added`

@@ -7,14 +7,14 @@ process ADAPTERREMOVAL {
     path(adapterlist)
 
     output:
-    tuple val(meta), path("${prefix}.truncated.fastq.gz")            , optional: true, emit: singles_truncated
-    tuple val(meta), path("${prefix}.discarded.fastq.gz")            , optional: true, emit: discarded
-    tuple val(meta), path("${prefix}.pair{1,2}.truncated.fastq.gz")  , optional: true, emit: paired_truncated
-    tuple val(meta), path("${prefix}.collapsed.fastq.gz")            , optional: true, emit: collapsed
-    tuple val(meta), path("${prefix}.collapsed.truncated.fastq.gz")  , optional: true, emit: collapsed_truncated
-    tuple val(meta), path("${prefix}.paired.fastq.gz")               , optional: true, emit: paired_interleaved
-    tuple val(meta), path('*.settings')                              , emit: settings
-    path "versions.yml"                                              , emit: versions
+    tuple val(meta), path("*.truncated.fastq.gz")            , optional: true, emit: singles_truncated
+    tuple val(meta), path("*.discarded.fastq.gz")            , optional: true, emit: discarded
+    tuple val(meta), path("*.pair{1,2}.truncated.fastq.gz")  , optional: true, emit: paired_truncated
+    tuple val(meta), path("*.collapsed.fastq.gz")            , optional: true, emit: collapsed
+    tuple val(meta), path("*.collapsed.truncated.fastq.gz")  , optional: true, emit: collapsed_truncated
+    tuple val(meta), path("*.paired.fastq.gz")               , optional: true, emit: paired_interleaved
+    tuple val(meta), path('*.settings')                      , emit: settings
+    path "versions.yml"                                      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -84,4 +84,21 @@ process ADAPTERREMOVAL {
         """
     }
 
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch "${prefix}.truncated.fastq.gz"
+    touch "${prefix}.discarded.fastq.gz"
+    touch "${prefix}.pair1.truncated.fastq.gz"
+    touch "${prefix}.pair2.truncated.fastq.gz"
+    touch "${prefix}.collapsed.fastq.gz"
+    touch "${prefix}.collapsed.truncated.fastq.gz"
+    touch "${prefix}.paired.fastq.gz"
+    touch "${prefix}.settings"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        adapterremoval: stub-version
+    END_VERSIONS
+    """
 }

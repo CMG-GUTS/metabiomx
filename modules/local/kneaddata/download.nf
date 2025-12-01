@@ -38,7 +38,7 @@ process KNEADDATA_DOWNLOAD {
     """
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        kneaddata: \$(kneaddata --version 2>&1 | sed -e "s/kneaddata v//g")
+        kneaddata: stub-version
     END_VERSIONS
     """
 }

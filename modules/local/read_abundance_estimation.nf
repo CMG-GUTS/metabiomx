@@ -46,17 +46,18 @@ process READ_ABUNDANCE_ESTIMATION {
     """
 
     stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch S1.sam
-    touch S1.bam
-    touch S1.stats
-    touch S1.flags
-    touch S1.log
+    touch "${prefix}.sam"
+    touch "${prefix}.bam"
+    touch "${prefix}.stats"
+    touch "${prefix}.flags"
+    touch "${prefix}.log"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        bowtie2: \$(echo \$(bowtie2 --version 2>&1) | sed 's/^.*bowtie2-align-s version //; s/ .*\$//')
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+        bowtie2: stub-version
+        samtools: stub-version
     END_VERSIONS
     """
 }

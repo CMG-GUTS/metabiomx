@@ -55,20 +55,17 @@ process BUSCO {
     """
     
     stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    
     """
-    touch S1_full_table.tsv
-    touch short_summary_S1.txt
+    touch "${prefix}_full_table.tsv"
+    touch "short_summary_${prefix}.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        busco: \$(busco --version 2> /dev/null | sed 's/BUSCO //g' )
-        python: \$(python --version)
-        R: \$(R --version | head -1)
+        busco: stub-version
+        python: stub-version
+        R: stub-version
     END_VERSIONS
-
-    sed -i.bak -E '
-    /^ *python:/ s/(: *).*\\b([0-9]+\\.[0-9]+\\.[0-9]+)\\b.*/\\1 \\2/
-    /^ *R:/ s/(: *).*\\b([0-9]+\\.[0-9]+\\.[0-9]+)\\b.*/\\1 \\2/
-    ' versions.yml
     """
 }

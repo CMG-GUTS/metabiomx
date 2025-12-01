@@ -31,7 +31,7 @@ process METAPHLAN_MERGEMETAPHLANTABLES {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        metaphlan4: \$(metaphlan --version 2>&1 | awk '{print \$3}')
+        metaphlan4: stub-version
     END_VERSIONS
     """
 }

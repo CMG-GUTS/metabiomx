@@ -63,11 +63,15 @@ process KNEADDATA {
     """
 
     stub:
-    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
+    touch "${prefix}_kneaddata_1.fastq.gz"
+    touch "${prefix}_kneaddata_2.fastq.gz"
+    touch "${prefix}_kneaddata.log"
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        kneaddata: \$(kneaddata --version 2>&1 | sed -e "s/kneaddata v//g")
+        kneaddata: stub-version
     END_VERSIONS
     """
 }

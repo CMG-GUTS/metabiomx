@@ -39,12 +39,13 @@ process INTERLEAVED {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    new_meta = meta.clone()
     """
-    touch ${prefix}.html
+    touch "${prefix}_interleaved.fastq.gz"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        reformat.sh: \$( reformat.sh --version | sed '/reformat.sh v/!d; s/.*v//' )
+        reformat.sh: stub-version
     END_VERSIONS
     """
 }

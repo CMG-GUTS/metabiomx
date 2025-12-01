@@ -67,7 +67,7 @@ process BUSCO_DOWNLOAD {
     """
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        busco: \$( busco --version 2> /dev/null | sed 's/BUSCO //g' )
+        busco: stub-version
     END_VERSIONS
     """
 }

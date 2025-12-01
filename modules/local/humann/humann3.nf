@@ -56,19 +56,19 @@ process HUMANN3 {
     """
 
     stub:
-    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}" 
     """
-    touch S1_genefamilies.tsv
-    touch S1_pathabundance.tsv
-    touch S1_pathcoverage.tsv
-    touch S1_metaphlan_bugs_list.tsv 
+    touch "${prefix}_genefamilies.tsv"
+    touch "${prefix}_pathabundance.tsv"
+    touch "${prefix}_pathcoverage.tsv"
+    touch "${prefix}_metaphlan_bugs_list.tsv"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        humann3: \$(humann3 --version | sed -e "s/humann v//g")
-        diamond: \$(diamond --version 2>&1 | awk '{print \$3}')
-        metaphlan3: \$(metaphlan --version 2>&1 | awk '{print \$3}')
-        bowtie2: \$(bowtie2 --version 2>&1 | head -1 | awk '{print \$3}')
+        humann3: stub-version
+        diamond: stub-version
+        metaphlan3: stub-version
+        bowtie2: stub-version
     END_VERSIONS
     """
 }

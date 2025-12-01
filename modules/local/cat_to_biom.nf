@@ -35,11 +35,12 @@ process CAT_TO_BIOM {
     def args = task.ext.args ?: ''
     """
     touch CAT_with_taxonomy.biom
-    touch scaffolds.fa.gz
+    touch scaffolds_renamed.fa.gz
+    touch combined_scaffolds.fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python3.11 --version | sed -e "s/Python //g")
+        python: stub-version
     END_VERSIONS
     """
 }

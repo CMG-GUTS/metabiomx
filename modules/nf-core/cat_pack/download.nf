@@ -42,17 +42,9 @@ process CATPACK_DOWNLOAD {
     stub:
     def args = task.ext.args ?: ''
     """
-    echo "CAT_pack \\
-        download \\
-        ${args} \\
-        --db ${db_name}
-        -o ${db_dir}/"
-
-    mkdir ${db_dir}/
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        catpack: \$(CAT_pack --version | sed 's/CAT_pack pack v//g;s/ .*//g')
+        catpack: stub-version
     END_VERSIONS
     """
 }

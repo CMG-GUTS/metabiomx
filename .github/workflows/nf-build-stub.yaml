@@ -1,0 +1,53 @@
+name: stub_run
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  stub_run:
+    runs-on: ubuntu-latest
+    env:
+      JAVA_VERSION: 17
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl python3-pip openjdk-${JAVA_VERSION}-jdk
+
+      - name: Install Nextflow
+        run: |
+          curl -s https://get.nextflow.io | bash
+          sudo mv nextflow /usr/local/bin/
+
+      - name: Test nextflow stub empty file filter
+        run: |
+          nextflow run main.nf -profile test -stub-run
+
+      - name: Test nextflow stub without kneaddata
+        run: |
+          nextflow run main.nf -profile test -stub-run --bypass_decon

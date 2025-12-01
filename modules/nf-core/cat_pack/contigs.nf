@@ -59,16 +59,17 @@ process CATPACK_CONTIGS {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.ORF2LCA.txt
-    touch ${prefix}.contig2classification.txt
-    touch ${prefix}.log
-    touch ${prefix}.diamond
-    touch ${prefix}.predicted_proteins.faa
-    touch ${prefix}.predicted_proteins.gff
+    touch "${prefix}_with_taxonomy.txt"
+    touch "${prefix}.ORF2LCA.txt"
+    touch "${prefix}.contig2classification.txt"
+    touch "${prefix}.log"
+    touch "${prefix}.diamond"
+    touch "${prefix}.predicted_proteins.faa"
+    touch "${prefix}.predicted_proteins.gff"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        catpack: \$(CAT_pack --version | sed 's/CAT_pack pack v//g;s/ .*//g')
+        catpack: stub-version
     END_VERSIONS
     """
 }

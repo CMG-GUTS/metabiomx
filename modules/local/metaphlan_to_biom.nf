@@ -31,7 +31,7 @@ process METAPHLAN_TO_BIOM {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python3.11 --version 2>&1 | awk '{print \$3}')
+        python: stub-version
     END_VERSIONS
     """
 }

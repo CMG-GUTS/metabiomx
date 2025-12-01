@@ -45,8 +45,8 @@ process MERGE_HUMANN3_TABLES {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        metaphlan4: \$(metaphlan --version 2>&1 | awk '{print \$3}')
-        humann3: \$(humann3 --version | sed -e "s/humann v//g")
+        metaphlan4: stub-version
+        humann3: stub-version
     END_VERSIONS
     """
 }

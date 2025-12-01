@@ -71,14 +71,12 @@ process HUMANN_DOWNLOAD {
     stub:
     def args = task.ext.args ?: ''
     """
-    mkdir -p ${db_dir}
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        humann3: \$(humann --version 2>&1 | awk '{print \$3}')
-        diamond: \$(diamond --version 2>&1 | awk '{print \$3}')
-        metaphlan3: \$(metaphlan --version 2>&1 | awk '{print \$3}')
-        bowtie2: \$(bowtie2 --version 2>&1 | awk '{print \$3}')
+        humann3: stub-version
+        diamond: stub-version
+        metaphlan3: stub-version
+        bowtie2: stub-version
     END_VERSIONS
     """
 }

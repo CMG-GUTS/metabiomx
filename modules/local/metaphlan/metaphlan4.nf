@@ -39,4 +39,18 @@ process METAPHLAN4 {
         bowtie2: \$(bowtie2 --version 2>&1 | awk '{print \$3}')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch "${prefix}.biom"
+    touch "${prefix}_profile.txt"
+    touch "${prefix}_bt2out.txt"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        metaphlan4: stub-version
+        bowtie2: stub-version
+    END_VERSIONS
+    """
 }

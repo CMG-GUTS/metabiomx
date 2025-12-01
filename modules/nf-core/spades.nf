@@ -66,23 +66,19 @@ process SPADES {
     """
 
     stub:
-    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def maxmem = task.memory.toGiga()
-    def reads = illumina ? ( meta.single_end ? "-s $illumina" : "-1 ${illumina[0]} -2 ${illumina[1]}" ) : ""
-    def custom_hmms = hmm ? "--custom-hmms $hmm" : ""
     """
-    echo "" | gzip > ${prefix}.scaffolds.fa.gz
-    echo "" | gzip > ${prefix}.contigs.fa.gz
-    echo "" | gzip > ${prefix}.transcripts.fa.gz
-    echo "" | gzip > ${prefix}.gene_clusters.fa.gz
-    echo "" | gzip > ${prefix}.assembly.gfa.gz
-    touch ${prefix}.spades.log
-    touch ${prefix}.warnings.log
+    touch "${prefix}.scaffolds.fa.gz"
+    touch "${prefix}.contigs.fa.gz"
+    touch "${prefix}.transcripts.fa.gz"
+    touch "${prefix}.gene_clusters.fa.gz"
+    touch "${prefix}.assembly.gfa.gz"
+    touch "${prefix}.spades.log"
+    touch "${prefix}.warnings.log"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        spades: \$(spades.py --version 2>&1 | sed -n 's/^.*SPAdes genome assembler v//p')
+        spades: stub-version
     END_VERSIONS
     """
 }
