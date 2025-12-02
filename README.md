@@ -129,7 +129,7 @@ nextflow run main.nf \
     --bowtie_db path/to/db/bowtie2 \
     --metaphlan_db path/to/db/metaphlan \
     --humann_db path/to/db/humann \
-    --cat_pack_db path/to/db/catpack \
+    --catpack_db path/to/db/catpack \
     --busco_db path/to/db/busco_downloads \
     -work-dir <work/dir> \
     -profile <singularity,docker>

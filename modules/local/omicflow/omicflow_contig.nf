@@ -33,7 +33,7 @@ process OMICFLOW_contig {
     taxa\$feature_subset(V2 >= as.numeric(${params.coverage_threshold}))
     taxa\$autoFlow(
         normalize = FALSE,
-        cpus = ${task.cpus}
+        threads = ${task.cpus}
     )
     EOF
 
@@ -54,7 +54,7 @@ process OMICFLOW_contig {
 
     stub:
     """
-    touch report.html
+    touch contig_annotated_report.html
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

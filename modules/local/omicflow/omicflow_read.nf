@@ -29,7 +29,7 @@ process OMICFLOW_read {
     taxa\$normalize()
     taxa\$autoFlow(
         normalize = FALSE,
-        cpus = ${task.cpus},
+        threads = ${task.cpus},
         feature_filter = filter_value
     )
     EOF
@@ -51,7 +51,7 @@ process OMICFLOW_read {
 
     stub:
     """
-    touch report.html
+    touch read_annotated_report.html
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
