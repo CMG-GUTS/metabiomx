@@ -56,7 +56,7 @@ workflow REPORT {
             newLine: true
         )
         .map { file(it) }
-    ch_collated_params.view()
+
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_params)
 
     // Create software versions yaml file
