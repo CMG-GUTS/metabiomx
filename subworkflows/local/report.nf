@@ -17,6 +17,7 @@ workflow REPORT {
     biom_contig
     metadata
     ch_multiqc_files
+    sample_size
     ch_versions
 
     main:
@@ -32,7 +33,7 @@ workflow REPORT {
             OMICFLOW_read(
                 metadata_ch.first(),
                 biom_read,
-                []
+                sample_size
             ).report.set{ omicflow_report_read }
             ch_versions = ch_versions.mix(OMICFLOW_read.out.versions)
         }
@@ -41,7 +42,7 @@ workflow REPORT {
             OMICFLOW_contig(
                 metadata_ch.first(),
                 biom_contig,
-                []
+                sample_size
             ).report.set{ omicflow_report_contig }
             ch_versions = ch_versions.mix(OMICFLOW_contig.out.versions)
         }

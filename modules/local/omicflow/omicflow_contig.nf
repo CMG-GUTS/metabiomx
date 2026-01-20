@@ -4,7 +4,10 @@ process OMICFLOW_contig {
     input:
     path(metadata_clean)
     path(biom_taxonomy)
-    path(rooted_tree_newick)
+    val sample_size
+
+    when:
+    sample_size > 1
 
     output:
     path "contig_annotated_report.html"     , emit: report

@@ -85,6 +85,7 @@ workflow PIPELINE_INITIALISATION {
 
     Software database paths              
         --bowtie_db                 Path to Bowtie2 database (default: null)
+        --bowtie_db_name		    Bowtie2 database name downloaded via kneaddata (default: 'human_genome bowtie2')
         --metaphlan_db              Path to MetaPhlAn database (default: null)
         --metaphlan_db_index        MetaPhlAn database index (default: mpa_vJun23_CHOCOPhlAnSGB_202403)
         --humann_db                 Path to HUMAnN3 database (default: null)

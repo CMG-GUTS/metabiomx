@@ -46,6 +46,10 @@ Since the latest version, metaBIOMx works with both a samplesheet (CSV) format o
 nextflow run main.nf --input <samplesheet.csv> -work-dir work -profile singularity
 nextflow run main.nf --input <'*_{1,R1,2,R2}.{fq,fq.gz,fastq,fastq.gz}'> -work-dir work -profile singularity
 ```
+You can also try to run the test data set in `tests/data` folder, these are also available via the `-profile test` but then the databases will be by default downloaded in the `tests/db` folder and you might want to specify a folder of your own choice.
+
+> [!NOTE]
+> Tests data should be runned with the flags `--bypass_trim` and `--bypass_decon`, which is default on `true` in the `conf/test.config`
 
 ### 📋 Sample Metadata File Specification
 

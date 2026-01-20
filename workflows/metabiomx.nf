@@ -105,6 +105,7 @@ workflow METABIOMX {
                 biom_contig_anot,
                 CHECK_INPUT.out.metadata,
                 ch_multiqc_files,
+                CHECK_INPUT.out.sample_size,
                 ch_versions
             )
 

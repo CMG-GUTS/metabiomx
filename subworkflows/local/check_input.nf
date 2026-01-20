@@ -47,4 +47,5 @@ workflow CHECK_INPUT {
     emit:
     meta                    = meta_ch
     metadata                = metadata_ch
+    sample_size             = meta.count()
 }

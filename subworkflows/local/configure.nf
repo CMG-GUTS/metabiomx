@@ -26,7 +26,7 @@ workflow CONFIGURE {
 
         if (!params.bypass_decon) {
             KNEADDATA_DOWNLOAD(
-                "human_genome bowtie2",
+                params.bowtie_db_name,
                 bowtie_ch
             ).db_dir_out.set{ kneaddata_db_ch }
         }
