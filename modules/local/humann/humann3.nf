@@ -40,9 +40,11 @@ process HUMANN3 {
         --output-basename $prefix \\
         --nucleotide-database \$CHOCO  \\
         --protein-database \$UNIREF \\
-        --metaphlan-options "--bowtie2db ${metaphlan_index} --offline" \\
+        --metaphlan-options "--bowtie2db ${metaphlan_index} --offline $args" \\
         --threads ${task.cpus} \\
-        --o-log ${prefix}.log
+        --o-log ${prefix}.log \\
+        $args2
+        
 
     find ./ -name "*_metaphlan_bugs_list.tsv" -exec mv {} . \\;
     
