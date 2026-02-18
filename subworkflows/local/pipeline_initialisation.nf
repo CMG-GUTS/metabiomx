@@ -74,12 +74,15 @@ workflow PIPELINE_INITIALISATION {
 
     Software non-default settings
         --multiqc_config            Path to custom multiqc yaml file (default: '$projectDir/assets/multiqc_config.yaml')
-        --bowtie2_opt               Bowtie2 options for kneaddata (default: '--very-sensitive-local --phred33')
-        --metaphlan_opt             MetaPhlAn options (default: '-t rel_ab_w_read_stats')
         --trimmomatic_opt           Trimmomatic options (default: 'MINLEN:60 ILLUMINACLIP:$params.adapters_file:2:30:10:8:TRUE SLIDINGWINDOW:4:20 MINLEN:75')
         --adapterremoval_opt        AdapterRemoval2 options (default: '--trimqualities --minquality 5')
         --adapters_file             Path to adapters fasta file for Trimmomatic (default: '$projectDir/assets/adapters/NexteraPE-PE.fa')
+        --metaphlan_opt             MetaPhlAn options (default: '-t rel_ab_w_read_stats')
+        --humann_opt                Humann3 options (default: null)
         --spades_opt                SPAdes options (default: '--meta')
+        --busco_opt                 BUSCO options (default: null)
+        --catpack_contigs_opt       CATpack Contig options (default: null)
+        --bowtie2_opt               Bowtie2 options for read_abundance_estimation (default: '--very-sensitive-local')
         --filter_bacteria           OmicFlow option to filter string-matching bacteria (default: 'bacterium, uncultured')
         --coverage_threshold        OmicFlow option to filter CAT annotations (default: '0.8')
 

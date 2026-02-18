@@ -31,7 +31,8 @@ process BUSCO {
         --mode genome \\
         -l bacteria \\
         --download_path busco_downloads/ \\
-        --cpu ${task.cpus}
+        --cpu ${task.cpus} \\
+        ${args}
 
     if [ -f ${prefix}/run_bacteria_odb12/full_table.tsv ]; then
         mv ${prefix}/run_bacteria_odb12/full_table.tsv ${prefix}_full_table.tsv

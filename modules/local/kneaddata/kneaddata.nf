@@ -32,14 +32,14 @@ process KNEADDATA {
 
     """
     kneaddata \\
-        $reads_args \\
-        -db $index \\
-        --output $prefix \\
-        -t $task.cpus \\
+        ${reads_args} \\
+        -db ${index} \\
+        --output ${prefix} \\
+        -t ${task.cpus} \\
         --bypass-trf \\
         --bypass-trim \\
-        $args \\
-        $args2
+        ${args} \\
+        ${args2}
 
     $read_output
 
@@ -53,7 +53,7 @@ process KNEADDATA {
         fi
     done
 
-    $log
+    ${log}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

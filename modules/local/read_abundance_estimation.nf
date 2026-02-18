@@ -26,10 +26,10 @@ process READ_ABUNDANCE_ESTIMATION {
     """
     bowtie2-build $fasta ref
     bowtie2 \\
-        --very-sensitive-local \\
+        ${args} \\
         -p ${task.cpus} \\
         -x ref \\
-        $read_arg \\
+        ${read_arg} \\
         -S ${prefix}.sam 2> ${prefix}_bowtie2.log
 
     samtools view -bS ${prefix}.sam | samtools sort - > ${prefix}.sorted.bam

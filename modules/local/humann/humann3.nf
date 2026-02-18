@@ -19,7 +19,7 @@ process HUMANN3 {
 
     script:
     def args = task.ext.args ?: ''
-    def args2 = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}" 
 
     """
@@ -35,16 +35,15 @@ process HUMANN3 {
     [ -z "\$MAPPING" ] && echo "mapping index files not found" 1>&2 && exit 1
 
     humann3 \\
+        ${args2} \\
         --input ${reads[0]} \\
         --output . \\
-        --output-basename $prefix \\
+        --output-basename ${prefix} \\
         --nucleotide-database \$CHOCO  \\
         --protein-database \$UNIREF \\
-        --metaphlan-options "--bowtie2db ${metaphlan_index} --offline $args" \\
         --threads ${task.cpus} \\
         --o-log ${prefix}.log \\
-        $args2
-        
+        --metaphlan-options "--bowtie2db ${metaphlan_index} --offline ${args}" \\
 
     find ./ -name "*_metaphlan_bugs_list.tsv" -exec mv {} . \\;
     
